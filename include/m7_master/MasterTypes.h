@@ -140,6 +140,51 @@ struct HighLevelGoal{
 
 };
 
+struct GeometricConstraint{
+	enum Type {
+		Z_PLANE_MIN,
+		Z_PLANE_MAX
+	};
+
+	Type type;
+
+	double z_min;
+	double z_max;
+	double radius;
+
+	GeometricConstraint(){}
+
+	GeometricConstraint(Type _type, double val)
+	{
+		type = _type;
+		switch(type)
+		{
+		case Z_PLANE_MIN:
+			val = z_min;
+			break;
+		case Z_PLANE_MAX:
+			val = z_max;
+			break;
+		}
+	}
+
+};
+
+struct BasicWaypoint{
+	Eigen::Vector3d pos;
+	std::vector<GeometricConstraint> constraints;
+};
+
+struct ComplexWaypoint{
+	DesiredState state;
+	std::vector<GeometricConstraint> constraints;
+};
+
+struct WaypointTrajectory{
+	ComplexWaypoint start, end;
+	std::vector<BasicWaypoint> middle;
+};
+
 
 
 

@@ -22,7 +22,9 @@
 
 #include <deque>
 
-TrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req);
+
+
+EfficientTrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req);
 
 void poseCallback(const geometry_msgs::PoseStampedConstPtr msg);
 void twistCallback(const geometry_msgs::TwistStampedConstPtr msg);
@@ -85,7 +87,7 @@ int main(int argc, char **argv){
 	ros::Rate loop_rate(MASTER_RATE);
 
 	HighLevelGoal hover;
-	hover.hover_pos << -8, -8, 1;
+	hover.hover_pos << -8, -9, .25;
 	hover.type = HighLevelGoal::HOVER;
 	goalQueue.push_front(hover);
 
@@ -111,12 +113,12 @@ int main(int argc, char **argv){
 }
 
 
-TrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req){
+EfficientTrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req){
 
 	pauvsi_trajectory::trajectoryGeneration srv;
 	srv.request = req;
 
-	TrajectorySegment seg;
+	EfficientTrajectorySegment seg;
 
 	if (traj_client.call(srv))
 	{

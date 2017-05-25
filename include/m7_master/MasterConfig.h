@@ -18,9 +18,9 @@
 
 #define P_POSITION 1,     0, 0, 0,      1,     0, 0, 0,    1
 #define I_POSITION 0,    0, 0, 0,       0      , 0, 0, 0,      0
-#define D_POSITION 1   , 0, 0, 0,     1    , 0, 0, 0,     1
+#define D_POSITION 1.2   , 0, 0, 0,     1.2    , 0, 0, 0,     1.5
 
 #define P_MOMENT 2,      0, 0, 0,      2      , 0, 0, 0,      -2
-#define D_MOMENT 3.5,      0, 0, 0,      3.5,      0, 0, 0,      3.5
+#define D_MOMENT 4,      0, 0, 0,      4,      0, 0, 0,      4
 
 #endif /* M7_MASTER_INCLUDE_M7_MASTER_MASTERCONFIG_H_ */
