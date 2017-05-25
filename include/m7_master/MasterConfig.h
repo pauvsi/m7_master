@@ -12,6 +12,8 @@
 #define POSE_TOPIC "state/pose"
 #define TWIST_TOPIC "state/twist"
 
+#define FORCE_TOPIC "forceRequest"
+
 #define MASTER_RATE 100
 
 #define P_POSITION 1, 0, 0, 0, 1, 0, 0, 0, 1

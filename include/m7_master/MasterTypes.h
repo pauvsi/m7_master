@@ -30,6 +30,25 @@ struct EfficientTrajectorySegment{
 	TrajectorySegment pos, vel, accel, jerk, snap;
 };
 
+struct DesiredState{
+	Eigen::Vector3d pos, vel, accel, snap, jerk;
+};
+
+/*
+ * desribes the physical constraints of the quadrotor
+ */
+struct PhysicalCharacterisics{
+	double mass; // kg
+
+	Eigen::Matrix3d J; // diagonal moment of inertia matrix - kg*m^2
+
+	double max_motor_thrust; // N
+	double min_motor_thrust; // N
+
+	Eigen::Matrix4d torqueTransition; // matrix which maps motor forces to total force and moments
+	Eigen::Matrix4d torqueTransition_inv; // maps total force and moments to motor forces
+};
+
 struct ExecutableTrajectory{
 	EfficientTrajectorySegment traj;
 
@@ -64,6 +83,28 @@ struct State{
 		last_pose_stamp = pose_stamp;
 		last_twist_stamp = pose_stamp;
 	}
+	/*
+	 * predict the state forward as best as possible
+	 */
+	State predictStateForward(ros::Time now)
+	{
+		State prediction;
+
+		double dt = now.toSec() - pose_stamp.toSec();
+
+		Eigen::Vector3d theta = (omega * dt);
+
+		Eigen::Quaterniond delta = Eigen::AngleAxisd(theta(0), Eigen::Vector3d::UnitX()) *
+				Eigen::AngleAxisd(theta(1), Eigen::Vector3d::UnitY()) *
+				Eigen::AngleAxisd(theta(2), Eigen::Vector3d::UnitZ());
+
+		prediction.attitude = this->attitude * delta;
+		prediction.omega = this->omega;
+		prediction.pos = this->pos + this->vel * dt;
+		prediction.vel = this->vel;
+
+		return prediction;
+	}
 };
 
 struct HighLevelGoal{
@@ -79,7 +120,7 @@ struct HighLevelGoal{
 	ExecutableTrajectory traj;
 
 	//HOVER
-	Eigen::Vector3d pos;
+	Eigen::Vector3d hover_pos;
 
 	//TRACK
 

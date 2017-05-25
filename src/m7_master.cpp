@@ -18,28 +18,32 @@
 #include "../include/m7_master/Polynomial.hpp"
 #include "../include/m7_master/MasterConfig.h"
 
+#include <pauvsi_trajectory/Physics.h>
+
+#include <deque>
+
 TrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req);
 
 void poseCallback(const geometry_msgs::PoseStampedConstPtr msg);
 void twistCallback(const geometry_msgs::TwistStampedConstPtr msg);
 
-std_msgs::Float64MultiArray computeMotorForces();
+DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals);
+std_msgs::Float64MultiArray computeMotorForces(DesiredState desired);
 
 
 
-
-EfficientTrajectorySegment currentTrajectory, nextTrajectory;
-ros::Time currentTrajectoryStartTime;
-double currentTrajectoryTransitionTime; // this is the time at which a transition between the two trajectories will take place.
+std::deque<HighLevelGoal> goalQueue; // stores the high level control goals
 
 PID positionPID, momentPID;
 Eigen::Matrix3d P_pos, I_pos, D_pos, P_moment, D_moment;
 
 State state;
 
-ros::ServiceClient client;
+ros::ServiceClient traj_client;
 ros::Subscriber pose_sub, twist_sub;
 ros::Publisher force_pub;
+
+bool executing;
 
 int main(int argc, char **argv){
 
@@ -47,10 +51,12 @@ int main(int argc, char **argv){
 
 	ros::NodeHandle nh;
 
-	client = nh.serviceClient<pauvsi_trajectory::trajectoryGeneration>("generate_trajectory"); // create a client
+	traj_client = nh.serviceClient<pauvsi_trajectory::trajectoryGeneration>("generate_trajectory"); // create a client
 
 	pose_sub = nh.subscribe(POSE_TOPIC, 1, poseCallback);
 	twist_sub = nh.subscribe(TWIST_TOPIC, 1, twistCallback);
+
+	force_pub = nh.advertise<std_msgs::Float64MultiArray>(FORCE_TOPIC, 1);
 
 	P_pos << P_POSITION;
 	I_pos << I_POSITION;
@@ -63,11 +69,23 @@ int main(int argc, char **argv){
 
 	ros::Rate loop_rate(MASTER_RATE);
 
+	executing = true;
+	HighLevelGoal hover;
+	hover.hover_pos << -9, -9, 1;
+	hover.type = HighLevelGoal::HOVER;
+	goalQueue.push_front(hover);
+
 	while(ros::ok())
 	{
 		ros::spinOnce();
 
 		//update and publish the motor forces
+		//WHEN CALLED WITHOUT GOAL WILL HOVER IN PLACE - CAUTION
+		if(executing)
+		{
+			force_pub.publish(computeMotorForces(getDesiredStateAndUpdateGoals(goalQueue)));
+		}
+
 
 		loop_rate.sleep();
 	}
@@ -83,7 +101,7 @@ TrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Req
 
 	TrajectorySegment seg;
 
-	if (client.call(srv))
+	if (traj_client.call(srv))
 	{
 		// extract the trajectory
 	}
@@ -93,6 +111,58 @@ TrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Req
 	}
 
 	return seg;
+}
+
+std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
+{
+
+}
+
+/*
+ * this function checks if goal is obsolete and computes the current desired state
+ */
+DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals)
+{
+	DesiredState ds;
+
+	top: // this is for the goto
+
+	// if there is no goal hover in place
+	if(goals.size() == 0)
+	{
+		HighLevelGoal hover;
+		hover.type = HighLevelGoal::HOVER;
+		hover.hover_pos = state.pos;
+		goals.push_front(hover); // a hover goal is indefinite
+	}
+
+	//-=-=-=-==-= this section computes the desired state
+
+	if(goals.front().type == HighLevelGoal::HOVER)
+	{
+		// the desired state is simply a position with no velocity and accel etc
+		ds.pos = goals.front().hover_pos;
+		ds.vel << 0, 0, 0;
+		ds.accel << 0, 0, 0;
+		ds.jerk << 0, 0, 0;
+		ds.snap << 0, 0, 0;
+	}
+	else if(goals.front().type == HighLevelGoal::FOLLOW_TRAJECTORY)
+	{
+		//check if the trajectory is finished computing
+		if(ros::Time::now().toSec() > goals.front().traj.finishTime.toSec()){
+			goals.pop_front(); // remove the trajectory follow goal. it is finished
+
+			goto top; // re run this function
+		}
+
+		double t = ros::Time::now().toSec() - goals.front().traj.startTime.toSec();
+
+		//now we can actually compute the desired state
+		ds = polyVal(goals.front().traj.traj, t);
+	}
+
+	return ds;
 }
 
 void poseCallback(const geometry_msgs::PoseStampedConstPtr msg)

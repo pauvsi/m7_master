@@ -56,6 +56,18 @@ Eigen::Vector3d polyVal(TrajectorySegment ts, double t)
 	return vec;
 }
 
+DesiredState polyVal(EfficientTrajectorySegment ets, double t)
+{
+	DesiredState ds;
+	ds.pos = polyVal(ets.pos, t);
+	ds.vel = polyVal(ets.vel, t);
+	ds.accel = polyVal(ets.accel, t);
+	ds.jerk = polyVal(ets.jerk, t);
+	ds.snap = polyVal(ets.snap, t);
+
+	return ds;
+}
+
 
 
 #endif /* PAUVSI_M7_PAUVSI_TRAJECTORY_INCLUDE_PAUVSI_TRAJECTORY_POLYNOMIAL_HPP_ */

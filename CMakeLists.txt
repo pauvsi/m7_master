@@ -19,7 +19,7 @@ find_package(Eigen3 REQUIRED)
 catkin_package(
  	INCLUDE_DIRS include
 #  LIBRARIES pauvsi_vio
-#  CATKIN_DEPENDS cv_bridge image_transport roscpp sensor_msgs std_msgs
+  CATKIN_DEPENDS roscpp pauvsi_trajectory
 #  DEPENDS system_lib
    DEPENDS eigen
 )
@@ -50,6 +50,6 @@ set_target_properties(pid PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(pid ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
 add_executable(master src/m7_master.cpp)
-target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} polynomial_master types_master pid)
+target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} polynomial_master types_master pid physics)
 
 add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
