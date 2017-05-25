@@ -82,11 +82,19 @@ struct State{
 		twist_stamp = pose_stamp;
 		last_pose_stamp = pose_stamp;
 		last_twist_stamp = pose_stamp;
+
+		attitude.w() = 1; // set the attitude
+		attitude.x() = 0;
+		attitude.y() = 0;
+		attitude.z() = 0;
 	}
 
 	State()
 	{
-
+		attitude.w() = 1; // set the attitude
+		attitude.x() = 0;
+		attitude.y() = 0;
+		attitude.z() = 0;
 	}
 	/*
 	 * predict the state forward as best as possible

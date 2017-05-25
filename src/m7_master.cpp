@@ -84,7 +84,6 @@ int main(int argc, char **argv){
 
 	ros::Rate loop_rate(MASTER_RATE);
 
-	executing = true;
 	HighLevelGoal hover;
 	hover.hover_pos << -9, -9, 1;
 	hover.type = HighLevelGoal::HOVER;
@@ -191,16 +190,15 @@ std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 	q_desired.w() = (1 + F_inertial_bar.transpose() * F_body_bar) * quatNorm;
 
 
-	temp = F_inertial_bar.cross(F_body_bar);
+	q_desired.vec() = F_inertial_bar.cross(F_body_bar) * quatNorm;
 
-	q_desired.x() = -temp(0) * quatNorm;
-	q_desired.y() = -temp(1) * quatNorm;
-	q_desired.z() = -temp(2) * quatNorm;
 
-	q_desired.normalize();
-	currentState.attitude.normalize();
+	//q_desired.normalize();
+	//currentState.attitude.normalize();
 
-	Eigen::Quaterniond q_error = currentState.attitude.conjugate() * q_desired;
+	ROS_DEBUG_STREAM("current q: " << currentState.attitude.w() << " "<< currentState.attitude.vec()<< " q_desire: " << q_desired.w() <<" "<< q_desired.vec());
+
+	Eigen::Quaterniond q_error = currentState.attitude.inverse() * q_desired;
 
 	Eigen::Vector3d q_error_vec;
 	q_error_vec << q_error.x(), q_error.y(), q_error.z();
@@ -226,6 +224,9 @@ std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 	vec.push_back(forces(3));
 
 	// set up dimensions
+	msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+	msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+	msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
 	msg.layout.dim[0].size = vec.size();
 	msg.layout.dim[0].stride = vec.size();
 	msg.layout.dim[0].label = "forces"; // or whatever name you typically use to index vec1
@@ -303,6 +304,8 @@ void poseCallback(const geometry_msgs::PoseStampedConstPtr msg)
 
 	state.last_pose_stamp = state.pose_stamp;
 	state.pose_stamp = msg->header.stamp;
+
+	executing = true;
 
 }
 void twistCallback(const geometry_msgs::TwistStampedConstPtr msg)
