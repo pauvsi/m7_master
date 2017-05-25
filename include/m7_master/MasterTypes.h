@@ -68,7 +68,7 @@ struct ExecutableTrajectory{
 };
 
 struct State{
-	Eigen::Vector3d pos, vel, omega;
+	Eigen::Vector3d pos, vel, accel, omega;
 
 	Eigen::Quaterniond attitude;
 
@@ -76,12 +76,17 @@ struct State{
 
 	ros::Time last_pose_stamp, last_twist_stamp;
 
-	State()
+	State(ros::Time t)
 	{
-		pose_stamp = ros::Time::now();
+		pose_stamp = t;
 		twist_stamp = pose_stamp;
 		last_pose_stamp = pose_stamp;
 		last_twist_stamp = pose_stamp;
+	}
+
+	State()
+	{
+
 	}
 	/*
 	 * predict the state forward as best as possible
@@ -102,6 +107,7 @@ struct State{
 		prediction.omega = this->omega;
 		prediction.pos = this->pos + this->vel * dt;
 		prediction.vel = this->vel;
+		prediction.accel = this->accel;
 
 		return prediction;
 	}

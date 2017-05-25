@@ -18,11 +18,15 @@ public:
 
 	Eigen::Vector3d i_sum;
 
+	ros::Time last_update;
+	bool previous_update;
+
 	PID()
 	{
 		noP = true;
 		noI = true;
 		noD = true;
+		previous_update = false;
 	}
 
 	PID(Eigen::Matrix3d P, Eigen::Matrix3d I, Eigen::Matrix3d D){
@@ -53,11 +57,16 @@ public:
 			noD = false;
 			this->D = D;
 		}
+		previous_update = false;
 	}
 
-	Eigen::Vector3d update(double dt, Eigen::Vector3d error, Eigen::Vector3d error_dot)
+	Eigen::Vector3d update(ros::Time now, Eigen::Vector3d error, Eigen::Vector3d error_dot)
 	{
 		Eigen::Vector3d fb;
+
+		double dt = 0;
+		if(previous_update){dt = now.toSec() - last_update.toSec();}
+		last_update = now;
 
 		if(!noP)
 		{
@@ -65,14 +74,21 @@ public:
 		}
 		if(!noI)
 		{
-			fb += -I * (i_sum + dt*error);
+			fb += -I * (i_sum + (dt)*error);
 		}
 		if(!noD)
 		{
 			fb += -D * error_dot;
 		}
 
+		previous_update = true;
+
 		return fb;
+	}
+
+	void reset(){
+		previous_update = false;
+		i_sum = Eigen::VectorXd::Zero(3);
 	}
 };
 
