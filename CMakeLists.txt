@@ -41,6 +41,9 @@ add_library(polynomial_master include/m7_master/Polynomial.hpp)
 set_target_properties(polynomial_master PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(polynomial_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
+add_library(physics include/m7_master/Physics.h)
+set_target_properties(physics PROPERTIES LINKER_LANGUAGE CXX)
+
 add_library(types_master include/m7_master/MasterTypes.h)
 set_target_properties(types_master PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(types_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})

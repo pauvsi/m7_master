@@ -18,7 +18,7 @@
 #include "../include/m7_master/Polynomial.hpp"
 #include "../include/m7_master/MasterConfig.h"
 
-#include <pauvsi_trajectory/Physics.h>
+#include "../include/m7_master/Physics.h"
 
 #include <deque>
 
