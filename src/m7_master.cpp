@@ -85,7 +85,7 @@ int main(int argc, char **argv){
 	ros::Rate loop_rate(MASTER_RATE);
 
 	HighLevelGoal hover;
-	hover.hover_pos << -9, -9, 1;
+	hover.hover_pos << -8, -8, 1;
 	hover.type = HighLevelGoal::HOVER;
 	goalQueue.push_front(hover);
 
@@ -132,7 +132,7 @@ TrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Req
 
 std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 {
-	ROS_DEBUG("computing motor forces");
+	//ROS_DEBUG("computing motor forces");
 	ros::Time t = ros::Time::now();
 	State currentState = state.predictStateForward(t);
 
@@ -196,7 +196,7 @@ std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 	//q_desired.normalize();
 	//currentState.attitude.normalize();
 
-	ROS_DEBUG_STREAM("current q: " << currentState.attitude.w() << " "<< currentState.attitude.vec()<< " q_desire: " << q_desired.w() <<" "<< q_desired.vec());
+	//ROS_DEBUG_STREAM("current q: " << currentState.attitude.w() << " "<< currentState.attitude.vec()<< " q_desire: " << q_desired.w() <<" "<< q_desired.vec());
 
 	Eigen::Quaterniond q_error = currentState.attitude.inverse() * q_desired;
 
@@ -239,7 +239,12 @@ std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 	msg.data.clear();
 	msg.data.insert(msg.data.end(), vec.begin(), vec.end());
 
-	ROS_DEBUG("computed forces");
+	//ROS_DEBUG("computed forces");
+
+	ROS_WARN_STREAM_COND((forces(0) > phys.max_motor_thrust || forces(0) < phys.min_motor_thrust ||
+			forces(1) > phys.max_motor_thrust || forces(1) < phys.min_motor_thrust ||
+			forces(2) > phys.max_motor_thrust || forces(2) < phys.min_motor_thrust ||
+			forces(3) > phys.max_motor_thrust || forces(3) < phys.min_motor_thrust), "FORCE(S) OUT OF BOUNDS " << forces.transpose());
 
 	return msg;
 }
