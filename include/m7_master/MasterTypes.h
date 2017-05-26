@@ -26,8 +26,23 @@ struct TrajectorySegment{
 	}
 };
 
+TrajectorySegment polyDer(TrajectorySegment);
+
 struct EfficientTrajectorySegment{
 	TrajectorySegment pos, vel, accel, jerk, snap;
+
+	EfficientTrajectorySegment(TrajectorySegment _pos)
+	{
+		pos = _pos;
+		vel = polyDer(pos);
+		accel = polyDer(vel);
+		jerk = polyDer(accel);
+		snap = polyDer(jerk);
+	}
+
+	EfficientTrajectorySegment(){
+
+	}
 };
 
 struct DesiredState{
@@ -160,10 +175,10 @@ struct GeometricConstraint{
 		switch(type)
 		{
 		case Z_PLANE_MIN:
-			val = z_min;
+			z_min = val;
 			break;
 		case Z_PLANE_MAX:
-			val = z_max;
+			z_max = val;
 			break;
 		}
 	}

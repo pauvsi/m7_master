@@ -22,6 +22,7 @@ catkin_package(
   CATKIN_DEPENDS roscpp pauvsi_trajectory
 #  DEPENDS system_lib
    DEPENDS eigen
+   
 )
 
 ###########

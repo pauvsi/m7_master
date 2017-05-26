@@ -23,7 +23,7 @@
 #include <deque>
 
 
-
+pauvsi_trajectory::trajectoryGeneration::Request generateTrajectoryRequest(WaypointTrajectory traj);
 EfficientTrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req);
 
 void poseCallback(const geometry_msgs::PoseStampedConstPtr msg);
@@ -87,9 +87,65 @@ int main(int argc, char **argv){
 	ros::Rate loop_rate(MASTER_RATE);
 
 	HighLevelGoal hover;
-	hover.hover_pos << -8, -9, .25;
+	hover.hover_pos << -9, -9, .5;
 	hover.type = HighLevelGoal::HOVER;
 	goalQueue.push_front(hover);
+
+
+	ROS_DEBUG("generating the request for trajectory");
+	WaypointTrajectory traj;
+	traj.start.state.pos << -9, -9, 0.5;
+	traj.start.state.vel << 0, 0, 0;
+	traj.start.state.accel << 0, 0, 0;
+	traj.start.state.jerk << 0, 0, 0;
+	traj.start.state.snap << 0, 0, 0;
+
+	GeometricConstraint geoConstMax, geoConstMin;
+	geoConstMin.type = GeometricConstraint::Z_PLANE_MIN;
+	geoConstMin.z_min = 0.0;
+	geoConstMax.z_max = 3.0;
+	geoConstMax.type = GeometricConstraint::Z_PLANE_MAX;
+	traj.start.constraints.push_back(geoConstMin);
+	traj.start.constraints.push_back(geoConstMax);
+
+	traj.end.state.pos << 9, 9, 0.5;
+	traj.end.state.vel << 0, 0, 0;
+	traj.end.state.accel << 0, 0, 0;
+	traj.end.state.jerk << 0, 0, 0;
+	traj.end.state.snap << 0, 0, 0;
+
+	BasicWaypoint m1;
+	m1.pos << -6, -6, 2.5;
+	m1.constraints.push_back(geoConstMin);
+	m1.constraints.push_back(geoConstMax);
+	traj.middle.push_back(m1);
+
+	BasicWaypoint m2;
+	m2.pos << 6,6, 2.5;
+	m2.constraints.push_back(geoConstMin);
+	m2.constraints.push_back(geoConstMax);
+	traj.middle.push_back(m2);
+
+	pauvsi_trajectory::trajectoryGenerationRequest req = generateTrajectoryRequest(traj);
+
+	//ROS_DEBUG_STREAM("traj req: " << req);
+
+	HighLevelGoal trajGoal;
+	trajGoal.type = HighLevelGoal::FOLLOW_TRAJECTORY;
+
+	ROS_DEBUG("waiting for trajectory generator");
+	traj_client.waitForExistence();
+
+	ros::Duration wait(2);
+	wait.sleep();
+
+	trajGoal.traj = ExecutableTrajectory(requestTrajectory(req), ros::Time::now() + ros::Duration(5)); // 5 seconds from now
+
+	goalQueue.push_back(trajGoal);
+
+	//traj_client.shutdown();
+	//ros::shutdown();
+	//return 0;
 
 	ROS_DEBUG("starting main loop");
 
@@ -113,23 +169,124 @@ int main(int argc, char **argv){
 }
 
 
+pauvsi_trajectory::trajectoryGeneration::Request generateTrajectoryRequest(WaypointTrajectory traj)
+{
+	//start
+	pauvsi_trajectory::trajectoryGeneration::Request req;
+	req.startPosition.x = traj.start.state.pos.x();
+	req.startPosition.y = traj.start.state.pos.y();
+	req.startPosition.z = traj.start.state.pos.z();
+
+	req.startVelocity.x = traj.start.state.vel.x();
+	req.startVelocity.y = traj.start.state.vel.y();
+	req.startVelocity.z = traj.start.state.vel.z();
+
+	req.startAcceleration.x = traj.start.state.accel.x();
+	req.startAcceleration.y = traj.start.state.accel.y();
+	req.startAcceleration.z = traj.start.state.accel.z();
+
+	req.startJerk.x = traj.start.state.jerk.x();
+	req.startJerk.y = traj.start.state.jerk.y();
+	req.startJerk.z = traj.start.state.jerk.z();
+
+	req.startSnap.x = traj.start.state.snap.x();
+	req.startSnap.y = traj.start.state.snap.y();
+	req.startSnap.z = traj.start.state.snap.z();
+
+	for(auto e : traj.start.constraints)
+	{
+		if(e.type == GeometricConstraint::Z_PLANE_MAX)
+		{
+			req.startMaxZ = e.z_max;
+		}
+		else if(e.type == GeometricConstraint::Z_PLANE_MIN)
+		{
+			req.startMinZ = e.z_min;
+		}
+	}
+
+	//end
+	req.goalPosition.x = traj.end.state.pos.x();
+	req.goalPosition.y = traj.end.state.pos.y();
+	req.goalPosition.z = traj.end.state.pos.z();
+
+	req.goalVelocity.x = traj.end.state.vel.x();
+	req.goalVelocity.y = traj.end.state.vel.y();
+	req.goalVelocity.z = traj.end.state.vel.z();
+
+	req.goalAcceleration.x = traj.end.state.accel.x();
+	req.goalAcceleration.y = traj.end.state.accel.y();
+	req.goalAcceleration.z = traj.end.state.accel.z();
+
+	req.goalJerk.x = traj.end.state.jerk.x();
+	req.goalJerk.y = traj.end.state.jerk.y();
+	req.goalJerk.z = traj.end.state.jerk.z();
+
+	req.goalSnap.x = traj.end.state.snap.x();
+	req.goalSnap.y = traj.end.state.snap.y();
+	req.goalSnap.z = traj.end.state.snap.z();
+
+	// the end has no constraints that do anything
+
+	//middle
+
+	//req.middle_size = traj.middle.size();
+
+	for(auto e : traj.middle)
+	{
+		geometry_msgs::Vector3 vec;
+		vec.x = e.pos.x();
+		vec.y = e.pos.y();
+		vec.z = e.pos.z();
+		req.middle.push_back(vec);
+		req.middleGeometricConstraints.push_back(e.constraints.at(0).z_min);
+		req.middleGeometricConstraints.push_back(e.constraints.at(1).z_max);
+	}
+
+	return req;
+}
+
 EfficientTrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGeneration::Request req){
 
 	pauvsi_trajectory::trajectoryGeneration srv;
 	srv.request = req;
 
-	EfficientTrajectorySegment seg;
+	EfficientTrajectorySegment eseg;
 
 	if (traj_client.call(srv))
 	{
 		// extract the trajectory
+		ROS_DEBUG_STREAM("traj response: " << srv.response);
+		TrajectorySegment seg;
+		seg.t0 = 0;
+		seg.tf = srv.response.tf;
+
+		Polynomial poly = Polynomial(srv.response.trajectory.layout.dim[1].size);
+
+		for(int i = 0; i < srv.response.trajectory.layout.dim[1].size; i++)
+		{
+			poly(i) = srv.response.trajectory.data.at(srv.response.trajectory.layout.dim[1].size * 0 + i);
+		}
+		seg.x = poly;
+		for(int i = 0; i < srv.response.trajectory.layout.dim[1].size; i++)
+		{
+			poly(i) = srv.response.trajectory.data.at(srv.response.trajectory.layout.dim[1].size * 1 + i);
+		}
+		seg.y = poly;
+		for(int i = 0; i < srv.response.trajectory.layout.dim[1].size; i++)
+		{
+			poly(i) = srv.response.trajectory.data.at(srv.response.trajectory.layout.dim[1].size * 2 + i);
+		}
+		seg.z = poly;
+
+		eseg = EfficientTrajectorySegment(seg);
 	}
 	else
 	{
 		ROS_ERROR("Failed to call service trajectory generation");
 	}
 
-	return seg;
+	return eseg;
 }
 
 std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
@@ -279,6 +436,18 @@ DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals)
 		ds.accel << 0, 0, 0;
 		ds.jerk << 0, 0, 0;
 		ds.snap << 0, 0, 0;
+
+		// check to see if a new goal is ready to be processed
+		if(goals.size() > 1)
+		{
+			// if there is a trajectory to follow
+			if((goals.at(1).type == HighLevelGoal::FOLLOW_TRAJECTORY) && (goals.at(1).traj.startTime.toSec() <= ros::Time::now().toSec()))
+			{
+				ROS_DEBUG("exectuting trajectory");
+				goals.pop_front();
+			}
+		}
+
 	}
 	else if(goals.front().type == HighLevelGoal::FOLLOW_TRAJECTORY)
 	{
@@ -293,6 +462,8 @@ DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals)
 
 		//now we can actually compute the desired state
 		ds = polyVal(goals.front().traj.traj, t);
+
+		ROS_DEBUG_STREAM("desired acceleration: " << ds.accel.transpose());
 	}
 
 	return ds;
