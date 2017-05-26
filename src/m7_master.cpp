@@ -115,13 +115,13 @@ int main(int argc, char **argv){
 	traj.end.state.snap << 0, 0, 0;
 
 	BasicWaypoint m1;
-	m1.pos << -6, -6, 2.5;
+	m1.pos << 0, 7, 2.5;
 	m1.constraints.push_back(geoConstMin);
 	m1.constraints.push_back(geoConstMax);
 	traj.middle.push_back(m1);
 
 	BasicWaypoint m2;
-	m2.pos << 6,6, 2.5;
+	m2.pos << 0,-7, 2.5;
 	m2.constraints.push_back(geoConstMin);
 	m2.constraints.push_back(geoConstMax);
 	traj.middle.push_back(m2);
@@ -142,6 +142,9 @@ int main(int argc, char **argv){
 	trajGoal.traj = ExecutableTrajectory(requestTrajectory(req), ros::Time::now() + ros::Duration(5)); // 5 seconds from now
 
 	goalQueue.push_back(trajGoal);
+
+	ros::Duration wait2(2);
+	wait2.sleep();
 
 	//traj_client.shutdown();
 	//ros::shutdown();
