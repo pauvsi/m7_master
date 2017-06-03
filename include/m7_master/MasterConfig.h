@@ -16,11 +16,11 @@
 
 #define MASTER_RATE 100
 
-#define P_POSITION 15,     0, 0, 0,      15,     0, 0, 0,    15
+#define P_POSITION 7,     0, 0, 0,      7,     0, 0, 0,    7
 #define I_POSITION 4,    0, 0, 0,       4      , 0, 0, 0,      4
-#define D_POSITION 4   , 0, 0, 0,    4    , 0, 0, 0,     4
+#define D_POSITION 2   , 0, 0, 0,    2    , 0, 0, 0,     2
 
-#define P_MOMENT 5,      0, 0, 0,      5      , 0, 0, 0,      -5
-#define D_MOMENT 15,      0, 0, 0,      15,      0, 0, 0,      15
+#define P_MOMENT 3,      0, 0, 0,      3      , 0, 0, 0,      -3
+#define D_MOMENT 9,      0, 0, 0,      9,      0, 0, 0,      9
 
 #endif /* M7_MASTER_INCLUDE_M7_MASTER_MASTERCONFIG_H_ */
