@@ -20,7 +20,10 @@
 
 #include "../include/m7_master/Physics.h"
 
+#include "../include/m7_master/roombaCallback.hpp"
+
 #include <deque>
+
 
 
 pauvsi_trajectory::trajectoryGeneration::Request generateTrajectoryRequest(WaypointTrajectory traj);
@@ -43,8 +46,12 @@ PhysicalCharacterisics phys;
 
 State state;
 
+geometry_msgs::PoseWithCovarianceStamped roombaPose[10], obsPose[4];
+
 ros::ServiceClient traj_client;
 ros::Subscriber pose_sub, twist_sub;
+ros::Subscriber roomba1, roomba2, roomba3, roomba4, roomba5, roomba6, roomba7, roomba8, roomba9, roomba10;
+ros::Subscriber obs1, obs2, obs3, obs4;
 ros::Publisher force_pub;
 
 bool executing;
@@ -63,6 +70,22 @@ int main(int argc, char **argv){
 	ROS_DEBUG("started client");
 	pose_sub = nh.subscribe(POSE_TOPIC, 1, poseCallback);
 	twist_sub = nh.subscribe(TWIST_TOPIC, 1, twistCallback);
+
+	roomba1 = nh.subscribe("roomba/roomba1", 3, roombaCallbackOne);
+	roomba2 = nh.subscribe("roomba/roomba2", 3, roombaCallbackTwo);
+	roomba3 = nh.subscribe("roomba/roomba3", 3, roombaCallbackThree);
+	roomba4 = nh.subscribe("roomba/roomba4", 3, roombaCallbackFour);
+	roomba5 = nh.subscribe("roomba/roomba5", 3, roombaCallbackFive);
+	roomba6 = nh.subscribe("roomba/roomba6", 3, roombaCallbackSix);
+	roomba7 = nh.subscribe("roomba/roomba7", 3, roombaCallbackSeven);
+	roomba8 = nh.subscribe("roomba/roomba8", 3, roombaCallbackEight);
+	roomba9 = nh.subscribe("roomba/roomba9", 3, roombaCallbackNine);
+	roomba10 = nh.subscribe("roomba/roomba10", 3, roombaCallbackTen);
+
+	obs1 = nh.subscribe("obstacle/obstacle1", 3, obsCallbackOne);
+	obs2 = nh.subscribe("obstacle/obstacle2", 3, obsCallbackTwo);
+	obs3 = nh.subscribe("obstacle/obstacle3", 3, obsCallbackThree);
+	obs4 = nh.subscribe("obstacle/obstacle4", 3, obsCallbackFour);
 
 	force_pub = nh.advertise<std_msgs::Float64MultiArray>(FORCE_TOPIC, 1);
 
@@ -128,7 +151,7 @@ int main(int argc, char **argv){
 
 	pauvsi_trajectory::trajectoryGenerationRequest req = generateTrajectoryRequest(traj);
 
-	//ROS_DEBUG_STREAM("traj req: " << req);
+	ROS_DEBUG_STREAM("traj req: " << req);
 
 	HighLevelGoal trajGoal;
 	trajGoal.type = HighLevelGoal::FOLLOW_TRAJECTORY;
@@ -506,3 +529,7 @@ void twistCallback(const geometry_msgs::TwistStampedConstPtr msg)
 	state.last_twist_stamp = state.twist_stamp;
 	state.twist_stamp = msg->header.stamp;
 }
+
+
+
+
