@@ -22,6 +22,7 @@
 
 #include "../include/m7_master/roombaCallback.hpp"
 
+
 #include <deque>
 
 
@@ -46,13 +47,14 @@ PhysicalCharacterisics phys;
 
 State state;
 
-geometry_msgs::PoseWithCovarianceStamped roombaPose[10], obsPose[4];
 
 ros::ServiceClient traj_client;
 ros::Subscriber pose_sub, twist_sub;
 ros::Subscriber roomba1, roomba2, roomba3, roomba4, roomba5, roomba6, roomba7, roomba8, roomba9, roomba10;
 ros::Subscriber obs1, obs2, obs3, obs4;
 ros::Publisher force_pub;
+
+
 
 bool executing;
 
