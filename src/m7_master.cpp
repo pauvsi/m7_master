@@ -428,10 +428,10 @@ std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 
 	//ROS_DEBUG("computed forces");
 
-	ROS_WARN_STREAM_COND((forces(0) > phys.max_motor_thrust || forces(0) < phys.min_motor_thrust ||
-			forces(1) > phys.max_motor_thrust || forces(1) < phys.min_motor_thrust ||
-			forces(2) > phys.max_motor_thrust || forces(2) < phys.min_motor_thrust ||
-			forces(3) > phys.max_motor_thrust || forces(3) < phys.min_motor_thrust), "FORCE(S) OUT OF BOUNDS " << forces.transpose());
+	ROS_WARN_STREAM_COND((forces(0) > MOTOR_ABS_MAX || forces(0) < MOTOR_ABS_MIN ||
+			forces(1) > MOTOR_ABS_MAX || forces(1) < MOTOR_ABS_MIN ||
+			forces(2) > MOTOR_ABS_MAX || forces(2) < MOTOR_ABS_MIN ||
+			forces(3) > MOTOR_ABS_MAX || forces(3) < MOTOR_ABS_MIN), "FORCE(S) OUT OF BOUNDS " << forces.transpose());
 
 	return msg;
 }
