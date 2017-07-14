@@ -40,11 +40,13 @@
 
 	<link name="base_link">
 			<collision>
+			<geometry>
 				<box size="0.25 0.25 0.07"/>
+				</geometry>
 			</collision>
 		<visual>
 			<geometry>
-				<mesh filename="${find pauvsi_m7_simulation/mesh/m7v3-assembly.stl}"/>
+				<mesh filename="package://m7_master/mesh/m7v3-assembly_noleg.stl"/>
 			</geometry>
 			<material name="gray"/>
 		</visual>
@@ -61,7 +63,9 @@
 	
 	<link name="bottom_box">
 	<collision>
+	<geometry>
 				<box size="0.195 0.215 0.09" />
+				</geometry>
 			</collision>
 		
 
@@ -83,7 +87,9 @@
 	
 	<link name="bottom_camera">
 	<collision>
+	<geometry>
 				<box size="0.05 0.05 0.15" />
+				</geometry>
 			</collision>
 		
 
@@ -103,7 +109,9 @@
 	
 	<link name="front_camera">
 	<collision>
+	<geometry>
 				<box size="0.05 0.05 0.15" />
+				</geometry>
 			</collision>
 		
 
@@ -120,7 +128,9 @@
 	
 	<link name="right_camera">
 	<collision>
+	<geometry>
 				<box size="0.05 0.05 0.15" />
+				</geometry>
 			</collision>
 		
 
@@ -137,7 +147,9 @@
 	
 	<link name="back_camera">
 	<collision>
+	<geometry>
 				<box size="0.05 0.05 0.15" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -152,7 +164,9 @@
 	
 	<link name="left_camera">
 	<collision>
+	<geometry>
 				<box size="0.05 0.05 0.15" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -168,7 +182,9 @@
 	
 	<link name = "arbotix">
 	<collision>
+	<geometry>
 				<box size="0.06 0.06 0.02" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -183,7 +199,9 @@
 	
 	<link name ="antenna">
 	<collision>
+	<geometry>
 				<box size="0.06 0.06 0.07" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -198,7 +216,9 @@
 	
 	<link name="arm1_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.334" radius="0.036"/>
+				</geometry>
 				<origin rpy="0 1.57075 0.7853981" xyz="0 0 0"/>
 			</collision>
 		
@@ -212,7 +232,9 @@
 	
 	<link name="arm2_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.334" radius="0.036"/>
+				</geometry>
 				<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 			</collision>
 		
@@ -226,7 +248,9 @@
 	
 	<link name="arm3_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.334" radius="0.036"/>
+				</geometry>
 				<origin rpy="0 1.57075 -2.3561481" xyz="0 0 0"/>
 			</collision>
 		
@@ -240,7 +264,9 @@
 	
 	<link name="arm4_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.334" radius="0.036"/>
+				</geometry>
 				<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 			</collision>
 	
@@ -256,7 +282,9 @@
 	
 	<link name="leg1_link">
 	<collision>
+	<geometry>
 				<box size="0.165 0.05 0.250" />
+				</geometry>
 				<origin xyz="0 0 -0.25" />
 			</collision>
 		
@@ -270,7 +298,9 @@
 	
 	<link name="leg2_link">
 	<collision>
+	<geometry>
 				<box size="0.165 0.05 0.250" />
+				</geometry>
 				<origin xyz="0 0 -0.25" />
 			</collision>
 		
@@ -284,7 +314,9 @@
 	
 	<link name="leg3_link">
 	<collision>
+	<geometry>
 				<box size="0.165 0.05 0.250" />
+				</geometry>
 				<origin xyz="0 0 -0.25" />
 			</collision>
 		
@@ -298,7 +330,9 @@
 				
 	<link name="leg4_link">
 	<collision>
+	<geometry>
 				<box size="0.165 0.05 0.250" />
+				</geometry>
 				<origin xyz="0 0 -0.25" />
 			</collision>
 		
@@ -314,7 +348,9 @@
 	
 	<link name="motor1_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.01" radius="0.2286" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -326,7 +362,9 @@
 	
 	<link name="motor2_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.01" radius="0.2286" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -338,7 +376,9 @@
 	
 	<link name="motor3_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.01" radius="0.2286" />
+				</geometry>
 			</collision>
 		
 	</link>
@@ -350,7 +390,9 @@
 	
 	<link name="motor4_link">
 	<collision>
+	<geometry>
 				<cylinder length="0.01" radius="0.2286" />
+				</geometry>
 			</collision>
 		
 	</link>
