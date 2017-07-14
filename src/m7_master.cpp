@@ -73,21 +73,21 @@ int main(int argc, char **argv){
 	pose_sub = nh.subscribe(POSE_TOPIC, 1, poseCallback);
 	twist_sub = nh.subscribe(TWIST_TOPIC, 1, twistCallback);
 
-	roomba1 = nh.subscribe("roomba/roomba1", 3, roombaCallbackOne);
-	roomba2 = nh.subscribe("roomba/roomba2", 3, roombaCallbackTwo);
-	roomba3 = nh.subscribe("roomba/roomba3", 3, roombaCallbackThree);
-	roomba4 = nh.subscribe("roomba/roomba4", 3, roombaCallbackFour);
-	roomba5 = nh.subscribe("roomba/roomba5", 3, roombaCallbackFive);
-	roomba6 = nh.subscribe("roomba/roomba6", 3, roombaCallbackSix);
-	roomba7 = nh.subscribe("roomba/roomba7", 3, roombaCallbackSeven);
-	roomba8 = nh.subscribe("roomba/roomba8", 3, roombaCallbackEight);
-	roomba9 = nh.subscribe("roomba/roomba9", 3, roombaCallbackNine);
-	roomba10 = nh.subscribe("roomba/roomba10", 3, roombaCallbackTen);
+	roomba1 = nh.subscribe("roomba/roomba1", 1, roombaCallbackOne);
+	roomba2 = nh.subscribe("roomba/roomba2", 1, roombaCallbackTwo);
+	roomba3 = nh.subscribe("roomba/roomba3", 1, roombaCallbackThree);
+	roomba4 = nh.subscribe("roomba/roomba4", 1, roombaCallbackFour);
+	roomba5 = nh.subscribe("roomba/roomba5", 1, roombaCallbackFive);
+	roomba6 = nh.subscribe("roomba/roomba6", 1, roombaCallbackSix);
+	roomba7 = nh.subscribe("roomba/roomba7", 1, roombaCallbackSeven);
+	roomba8 = nh.subscribe("roomba/roomba8", 1, roombaCallbackEight);
+	roomba9 = nh.subscribe("roomba/roomba9", 1, roombaCallbackNine);
+	roomba10 = nh.subscribe("roomba/roomba10", 1, roombaCallbackTen);
 
-	obs1 = nh.subscribe("obstacle/obstacle1", 3, obsCallbackOne);
-	obs2 = nh.subscribe("obstacle/obstacle2", 3, obsCallbackTwo);
-	obs3 = nh.subscribe("obstacle/obstacle3", 3, obsCallbackThree);
-	obs4 = nh.subscribe("obstacle/obstacle4", 3, obsCallbackFour);
+	obs1 = nh.subscribe("obstacle/obstacle1", 1, obsCallbackOne);
+	obs2 = nh.subscribe("obstacle/obstacle2", 1, obsCallbackTwo);
+	obs3 = nh.subscribe("obstacle/obstacle3", 1, obsCallbackThree);
+	obs4 = nh.subscribe("obstacle/obstacle4", 1, obsCallbackFour);
 
 	force_pub = nh.advertise<std_msgs::Float64MultiArray>(FORCE_TOPIC, 1);
 
