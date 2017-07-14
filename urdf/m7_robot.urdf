@@ -34,6 +34,10 @@
 		<color rgba="0.9 0.9 0.9 1" />
 	</material>
 
+	<material name="carbon">
+		<color rgba="0.2 0.2 0.2 1" />
+	</material>
+
 	<link name="base_link">
 		<visual>
 			<geometry>
@@ -91,7 +95,59 @@
 		<child link="front_camera" />
 		<origin xyz="0 0.142 0" rpy="-1.57079632679 0 0"/>
 	</joint>
+	
 
+	<!-- RIGHT Camera -->
+	
+	<link name="right_camera">
+		<visual>
+			<geometry>
+				<box size="0.05 0.05 0.15" />
+			</geometry>
+			<material name="black"/>
+		</visual>
+	</link>
+	
+	<joint name="base_to_right_camera" type="fixed">
+		<parent link="base_link" />
+		<child link="right_camera" />
+		<origin xyz="0.142 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+	</joint>
+
+	
+	<!-- BACK Camera -->
+	
+	<link name="back_camera">
+		<visual>
+			<geometry>
+				<box size="0.05 0.05 0.15" />
+			</geometry>
+			<material name="black"/>
+		</visual>
+	</link>
+	
+	<joint name="base_to_back_camera" type="fixed">
+		<parent link="base_link" />
+		<child link="back_camera" />
+		<origin xyz="0 -0.142 0" rpy="1.57079632679 3.14159265359 0"/>
+	</joint>
+
+	<!-- LEFT Camera -->
+	
+	<link name="left_camera">
+		<visual>
+			<geometry>
+				<box size="0.05 0.05 0.15" />
+			</geometry>
+			<material name="black"/>
+		</visual>
+	</link>
+	
+	<joint name="base_to_left_camera" type="fixed">
+		<parent link="base_link" />
+		<child link="left_camera" />
+		<origin xyz="-0.142 0 0" rpy="1.57079632679 3.14159265359 -1.57079632679"/>
+	</joint>
 
 	
 	<!-- Arbotix -->
@@ -137,7 +193,7 @@
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
 
-			<material name="white"/>
+			<material name="carbon"/>
 
 			<origin rpy="0 1.57075 0.7853981" xyz="0 0 0"/>
 		</visual>
@@ -154,7 +210,7 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="red"/>
+			<material name="carbon"/>
 			<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -170,7 +226,7 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="red"/>
+			<material name="carbon"/>
 			<origin rpy="0 1.57075 -2.3561481" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -186,7 +242,7 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="white"/>
+			<material name="carbon"/>
 			<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -271,7 +327,7 @@
 				<cylinder length="0.01" radius="0.2286" />
 			</geometry>
 			<material name="transGray">
-				<color rgba="0.5 0.5 0.5 0.5" />
+				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
 		</visual>
 	</link>
@@ -287,7 +343,7 @@
 				<cylinder length="0.01" radius="0.2286" />
 			</geometry>
 			<material name="transGray">
-				<color rgba="0.5 0.5 0.5 0.5" />
+				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
 		</visual>
 	</link>
@@ -303,7 +359,7 @@
 				<cylinder length="0.01" radius="0.2286" />
 			</geometry>
 			<material name="transGray">
-				<color rgba="0.5 0.5 0.5 0.5" />
+				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
 		</visual>
 	</link>
@@ -319,7 +375,7 @@
 				<cylinder length="0.01" radius="0.2286" />
 			</geometry>
 			<material name="transGray">
-				<color rgba="0.5 0.5 0.5 0.5" />
+				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
 		</visual>
 	</link>
