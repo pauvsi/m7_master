@@ -39,21 +39,41 @@
 	</material>
 
 	<link name="base_link">
+			<collision>
+				<box size="0.25 0.25 0.07"/>
+			</collision>
 		<visual>
 			<geometry>
-				<box size="0.25 0.25 0.07"/>
+				<mesh filename="${find pauvsi_m7_simulation/mesh/m7v3-assembly.stl}"/>
 			</geometry>
 			<material name="gray"/>
 		</visual>
+
+		<!-- this is the only actual inertia calculation other than the arm-->
+		<inertial>
+			<mass value="4.5"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<!-- APPROXIMATED AS 0.4 0.4 0.1 CUBOID-->
+			<inertia ixx="0.24375" ixy="0" ixz="0" iyy="0.24375" iyz="0" izz="0.48" />
+		</inertial>
+
 	</link>
 	
 	<link name="bottom_box">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.195 0.215 0.09" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="gray"/>
 		</visual>
+
+		<!--filler inertia no effect-->
+		<inertial>
+     		 	<mass value="1e-9" />
+      			<origin xyz="0 0 0" rpy="0 0 0"/>
+      			<inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9" />
+    		</inertial>
 	</link>
 	
 	<joint name="base_to_bottom" type="fixed">
@@ -65,12 +85,14 @@
 	<!-- BOTTOM Camera -->
 	
 	<link name="bottom_camera">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.05 0.05 0.15" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="black"/>
 		</visual>
+
 	</link>
 	
 	<joint name="base_to_bottom_camera" type="fixed">
@@ -79,15 +101,21 @@
 		<origin xyz="0.054 -0.029 -0.13" rpy="0 3.14159265359 1.57079632679"/>
 	</joint>
 
+
+	
+
+
 	<!-- FRONT Camera -->
 	
 	<link name="front_camera">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.05 0.05 0.15" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="black"/>
 		</visual>
+
 	</link>
 	
 	<joint name="base_to_front_camera" type="fixed">
@@ -100,12 +128,14 @@
 	<!-- RIGHT Camera -->
 	
 	<link name="right_camera">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.05 0.05 0.15" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="black"/>
 		</visual>
+
 	</link>
 	
 	<joint name="base_to_right_camera" type="fixed">
@@ -118,10 +148,11 @@
 	<!-- BACK Camera -->
 	
 	<link name="back_camera">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.05 0.05 0.15" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="black"/>
 		</visual>
 	</link>
@@ -135,10 +166,11 @@
 	<!-- LEFT Camera -->
 	
 	<link name="left_camera">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.05 0.05 0.15" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="black"/>
 		</visual>
 	</link>
@@ -153,10 +185,11 @@
 	<!-- Arbotix -->
 	
 	<link name = "arbotix">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.06 0.06 0.02" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="blue"/>
 				
 		</visual>
@@ -171,10 +204,11 @@
 	<!-- Antenna -->
 	
 	<link name ="antenna">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.06 0.06 0.07" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="black" />
 		</visual>
 	</link>
@@ -188,10 +222,11 @@
 	<!-- ARMS -->
 	
 	<link name="arm1_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.334" radius="0.036"/>
-			</geometry>
+			</collision>
+		<visual>
+			
 
 			<material name="carbon"/>
 
@@ -206,10 +241,11 @@
 	</joint>
 	
 	<link name="arm2_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.334" radius="0.036"/>
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="carbon"/>
 			<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 		</visual>
@@ -222,10 +258,11 @@
 	</joint>
 	
 	<link name="arm3_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.334" radius="0.036"/>
-			</geometry>
+			</collision>
+		<visual>
+		
 			<material name="carbon"/>
 			<origin rpy="0 1.57075 -2.3561481" xyz="0 0 0"/>
 		</visual>
@@ -238,10 +275,11 @@
 	</joint>
 	
 	<link name="arm4_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.334" radius="0.036"/>
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="carbon"/>
 			<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 		</visual>
@@ -256,10 +294,11 @@
 	<!--LEGS-->
 	
 	<link name="leg1_link">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.165 0.05 0.250" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
@@ -272,10 +311,11 @@
 	</joint>
 	
 	<link name="leg2_link">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.165 0.05 0.250" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
@@ -288,10 +328,11 @@
 	</joint>
 	
 	<link name="leg3_link">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.165 0.05 0.250" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
@@ -304,10 +345,11 @@
 	</joint>
 				
 	<link name="leg4_link">
-		<visual>
-			<geometry>
+	<collision>
 				<box size="0.165 0.05 0.250" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
@@ -322,10 +364,11 @@
 	<!-- MOTORS -->
 	
 	<link name="motor1_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.01" radius="0.2286" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="transGray">
 				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
@@ -338,10 +381,11 @@
 	</joint>
 	
 	<link name="motor2_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.01" radius="0.2286" />
-			</geometry>
+			</collision>
+		<visual>
+
 			<material name="transGray">
 				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
@@ -354,10 +398,11 @@
 	</joint>
 	
 	<link name="motor3_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.01" radius="0.2286" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="transGray">
 				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
@@ -370,10 +415,11 @@
 	</joint>
 	
 	<link name="motor4_link">
-		<visual>
-			<geometry>
+	<collision>
 				<cylinder length="0.01" radius="0.2286" />
-			</geometry>
+			</collision>
+		<visual>
+			
 			<material name="transGray">
 				<color rgba="0.2 0.2 0.2 0.5" />
 			</material>
