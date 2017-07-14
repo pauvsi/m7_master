@@ -46,7 +46,7 @@
 			</collision>
 		<visual>
 			<geometry>
-				<mesh filename="package://m7_master/mesh/m7v3-assembly_noleg.stl"/>
+				<mesh filename="package://m7_master/mesh/m7v3-assembly_noleg.stl" scale="0.001 0.001 0.001"/>
 			</geometry>
 			<material name="gray"/>
 		</visual>
