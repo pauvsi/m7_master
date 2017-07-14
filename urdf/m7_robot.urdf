@@ -7,14 +7,39 @@
 -->
 <?xml version="1.0"?>
 <robot name="pauvsi_m7_robot">
+
+	<!-- colors -->
+
+	<material name="green">
+		<color rgba="0.05 0.9 0.05 1" />
+	</material>
+
+	<material name="blue">
+		<color rgba="0.01 0.01 0.9 1" />
+	</material>
+
+	<material name="red">
+		<color rgba="0.9 0.01 0.01 1" />
+	</material>
+
+	<material name="gray">
+		<color rgba="0.6 0.6 0.6 1" />
+	</material>
+
+	<material name="black">
+		<color rgba="0.05 0.05 0.05 1" />
+	</material>
+
+	<material name="white">
+		<color rgba="0.9 0.9 0.9 1" />
+	</material>
+
 	<link name="base_link">
 		<visual>
 			<geometry>
 				<box size="0.25 0.25 0.07"/>
 			</geometry>
-			<material name="gray">
-				<color rgba="0.5 0.5 1 1" />
-			</material>
+			<material name="gray"/>
 		</visual>
 	</link>
 	
@@ -23,9 +48,7 @@
 			<geometry>
 				<box size="0.195 0.215 0.09" />
 			</geometry>
-			<material name="grey">
-				<color rgba="0.5 0.5 0.5 1" />
-			</material>
+			<material name="gray"/>
 		</visual>
 	</link>
 	
@@ -35,24 +58,41 @@
 		<origin xyz="0 0.02 -0.09" />
 	</joint>	
 		
-	<!-- Camera -->
+	<!-- BOTTOM Camera -->
 	
 	<link name="bottom_camera">
 		<visual>
 			<geometry>
-				<box size="0.05 0.05 0.05" />
+				<box size="0.05 0.05 0.15" />
 			</geometry>
-			<material name="red">
-				<color rgba="1 0.5 0.5 1" />
-			</material>
+			<material name="black"/>
 		</visual>
 	</link>
 	
-	<joint name="bottom_to_camera" type="fixed">
-		<parent link="bottom_box" />
+	<joint name="base_to_bottom_camera" type="fixed">
+		<parent link="base_link" />
 		<child link="bottom_camera" />
-		<origin xyz="0.054 -0.029 -0.070" />
+		<origin xyz="0.054 -0.029 -0.13" rpy="0 3.14159265359 1.57079632679"/>
 	</joint>
+
+	<!-- FRONT Camera -->
+	
+	<link name="front_camera">
+		<visual>
+			<geometry>
+				<box size="0.05 0.05 0.15" />
+			</geometry>
+			<material name="black"/>
+		</visual>
+	</link>
+	
+	<joint name="base_to_front_camera" type="fixed">
+		<parent link="base_link" />
+		<child link="front_camera" />
+		<origin xyz="0 0.142 0" rpy="-1.57079632679 0 0"/>
+	</joint>
+
+
 	
 	<!-- Arbotix -->
 	
@@ -61,7 +101,8 @@
 			<geometry>
 				<box size="0.06 0.06 0.02" />
 			</geometry>
-			<material name="red" />
+			<material name="blue"/>
+				
 		</visual>
 	</link>
 	
@@ -78,7 +119,7 @@
 			<geometry>
 				<box size="0.06 0.06 0.07" />
 			</geometry>
-			<material name="red" />
+			<material name="black" />
 		</visual>
 	</link>
 	 
@@ -95,9 +136,9 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="white">
-				<color rgba="0.9 0.9 0.9 1" />
-			</material>
+
+			<material name="white"/>
+
 			<origin rpy="0 1.57075 0.7853981" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -113,9 +154,7 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="red">
-				<color rgba="0.8 0 0 1" />
-			</material>
+			<material name="red"/>
 			<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -131,9 +170,7 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="red">
-				<color rgba="0.8 0 0 1" />
-			</material>
+			<material name="red"/>
 			<origin rpy="0 1.57075 -2.3561481" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -149,9 +186,7 @@
 			<geometry>
 				<cylinder length="0.334" radius="0.036"/>
 			</geometry>
-			<material name="white">
-				<color rgba="0.9 0.9 0.9 1" />
-			</material>
+			<material name="white"/>
 			<origin rpy="0 1.57075 2.3561481" xyz="0 0 0"/>
 		</visual>
 	</link>
@@ -169,9 +204,7 @@
 			<geometry>
 				<box size="0.165 0.05 0.250" />
 			</geometry>
-			<material name="blue">
-				<color rgba="0.9 0.9 0.9 1" />
-			</material>
+			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
 	</link>
@@ -187,9 +220,7 @@
 			<geometry>
 				<box size="0.165 0.05 0.250" />
 			</geometry>
-			<material name="blue">
-				<color rgba="0.9 0.9 1 1" />
-			</material>
+			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
 	</link>
@@ -205,9 +236,7 @@
 			<geometry>
 				<box size="0.165 0.05 0.250" />
 			</geometry>
-			<material name="blue">
-				<color rgba="0.9 0.9 1 1" />
-			</material>
+			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
 	</link>
@@ -223,9 +252,7 @@
 			<geometry>
 				<box size="0.165 0.05 0.250" />
 			</geometry>
-			<material name="blue">
-				<color rgba="0.9 0.9 1 1" />
-			</material>
+			<material name="gray"/>
 			<origin xyz="0 0 -0.25" />
 		</visual>
 	</link>
