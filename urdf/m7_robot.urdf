@@ -45,10 +45,11 @@
 				</geometry>
 			</collision>
 		<visual>
+			<origin xyz=“0 0 0” rpy=“1.57079632679 0 0”/>
 			<geometry>
-				<mesh filename="package://m7_master/mesh/full_assembly.dae" scale="0.001 0.001 0.001"/>
+				<mesh filename="package://m7_master/mesh/m7v3-assembly_centered.stl” scale="0.001 0.001 0.001"/>
 			</geometry>
-			<material name="gray"/>
+			<material name=“carbon”/>
 		</visual>
 
 		<!-- this is the only actual inertia calculation other than the arm-->
