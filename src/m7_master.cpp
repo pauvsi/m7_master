@@ -10,6 +10,7 @@
 #include "std_msgs/Float64MultiArray.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/TwistStamped.h"
+#include "nav_msgs/Odometry.h"
 
 #include <pauvsi_trajectory/trajectoryGeneration.h>
 
@@ -25,6 +26,8 @@
 
 #include <deque>
 
+//set false if estimating state another way
+#define USE_GAZEBO_GROUND_TRUTH true
 
 
 pauvsi_trajectory::trajectoryGeneration::Request generateTrajectoryRequest(WaypointTrajectory traj);
@@ -32,6 +35,7 @@ EfficientTrajectorySegment requestTrajectory(pauvsi_trajectory::trajectoryGenera
 
 void poseCallback(const geometry_msgs::PoseStampedConstPtr msg);
 void twistCallback(const geometry_msgs::TwistStampedConstPtr msg);
+void gtCallback(const nav_msgs::OdometryConstPtr& msg);
 
 DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals);
 std_msgs::Float64MultiArray computeMotorForces(DesiredState desired);
@@ -49,7 +53,11 @@ State state;
 
 
 ros::ServiceClient traj_client;
+#if USE_GAZEBO_GROUND_TRUTH
+ros::Subscriber gt_sub;
+#else
 ros::Subscriber pose_sub, twist_sub;
+#endif
 ros::Subscriber roomba1, roomba2, roomba3, roomba4, roomba5, roomba6, roomba7, roomba8, roomba9, roomba10;
 ros::Subscriber obs1, obs2, obs3, obs4;
 ros::Publisher force_pub;
@@ -70,8 +78,12 @@ int main(int argc, char **argv){
 	traj_client = nh.serviceClient<pauvsi_trajectory::trajectoryGeneration>("generate_trajectory"); // create a client
 
 	ROS_DEBUG("started client");
+#if USE_GAZEBO_GROUND_TRUTH
+	gt_sub = nh.subscribe("ground_truth/state", 1, gtCallback);
+#else
 	pose_sub = nh.subscribe(POSE_TOPIC, 1, poseCallback);
 	twist_sub = nh.subscribe(TWIST_TOPIC, 1, twistCallback);
+#endif
 
 	roomba1 = nh.subscribe("roomba/roomba1", 1, roombaCallbackOne);
 	roomba2 = nh.subscribe("roomba/roomba2", 1, roombaCallbackTwo);
@@ -530,6 +542,37 @@ void twistCallback(const geometry_msgs::TwistStampedConstPtr msg)
 
 	state.last_twist_stamp = state.twist_stamp;
 	state.twist_stamp = msg->header.stamp;
+}
+
+void gtCallback(const nav_msgs::OdometryConstPtr& msg)
+{
+	Eigen::Vector3d newVel;
+	newVel << msg->twist.twist.linear.x, msg->twist.twist.linear.y, msg->twist.twist.linear.z;
+
+	state.accel = (newVel - state.vel) / (msg->header.stamp.toSec() - state.twist_stamp.toSec()); // numerically differentiate to get the accel
+
+	state.vel = newVel;
+
+	state.omega.x() = msg->twist.twist.angular.x;
+	state.omega.y() = msg->twist.twist.angular.y;
+	state.omega.z() = msg->twist.twist.angular.z;
+
+	state.last_twist_stamp = state.twist_stamp;
+	state.twist_stamp = msg->header.stamp;
+
+	state.pos.x() = msg->pose.pose.position.x;
+	state.pos.y() = msg->pose.pose.position.y;
+	state.pos.z() = msg->pose.pose.position.z;
+
+	state.attitude.w() = msg->pose.pose.orientation.w;
+	state.attitude.x() = msg->pose.pose.orientation.x;
+	state.attitude.y() = msg->pose.pose.orientation.y;
+	state.attitude.z() = msg->pose.pose.orientation.z;
+
+	state.last_pose_stamp = state.pose_stamp;
+	state.pose_stamp = msg->header.stamp;
+
+	executing = true;
 }
 
 
