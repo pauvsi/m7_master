@@ -45,11 +45,12 @@
 				</geometry>
 			</collision>
 		<visual>
-			<origin xyz=“0 0 0” rpy=“1.57079632679 0 0”/>
+		   <origin xyz="0 0 0" rpy="1.570796 0 0.7853981" />
 			<geometry>
-				<mesh filename="package://m7_master/mesh/m7v3-assembly_centered.stl” scale="0.001 0.001 0.001"/>
+			   <mesh filename="package://m7_master/mesh/m7v3-assembly_centered.stl" scale="0.001 0.001 0.001" />
+
 			</geometry>
-			<material name=“carbon”/>
+			<material name="carbon" />
 		</visual>
 
 		<!-- this is the only actual inertia calculation other than the arm-->
@@ -84,6 +85,15 @@
 		<origin xyz="0 0.02 -0.09" />
 	</joint>	
 		
+    <gazebo>
+      <plugin name="quadrotor_aerodynamics" filename="libhector_gazebo_quadrotor_aerodynamics.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <bodyName>base_link</bodyName>
+        <frameId>base_link</frameId>
+      </plugin>
+   </gazebo>
+
 	<!-- BOTTOM Camera -->
 	
 	<link name="bottom_camera">
@@ -102,8 +112,15 @@
 		<origin xyz="0.054 -0.029 -0.13" rpy="0 3.14159265359 1.57079632679"/>
 	</joint>
 
+	<joint name="bottom_camera_optical_link" type="fixed">
+		<origin xyz="0 0 0" rpy=" 0 -1.57079632679 1.57079632679" />
+		<parent link="bottom_camera" />
+		<child link="bottom_camera_optical_frame" />
+	</joint>
+	<link name="bottom_camera_optical_frame"/>
+	
 	<!-- camera -->
-  <gazebo reference="bottom_camera">
+  <gazebo reference="bottom_camera_optical_frame">
     <sensor type="camera" name="bottom_camera">
       <update_rate>50.0</update_rate>
       <camera name="bottom_camera">
@@ -114,7 +131,7 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <near>0.05</near>
+          <near>0.001</near>
           <far>300</far>
         </clip>
         <noise>
@@ -165,8 +182,15 @@
 		<origin xyz="0 0.142 0" rpy="-1.57079632679 0 0"/>
 	</joint>
 	
+	<joint name="front_camera_optical_link" type="fixed">
+		<origin xyz="0 0 0" rpy=" 0 -1.57079632679  1.57079632679" />
+		<parent link="front_camera" />
+		<child link="front_camera_optical_frame" />
+	</joint>
+	<link name="front_camera_optical_frame"/>
+	
 	<!-- camera -->
-  <gazebo reference="front_camera">
+  <gazebo reference="front_camera_optical_frame">
     <sensor type="camera" name="front_camera">
       <update_rate>10.0</update_rate>
       <camera name="front_camera">
@@ -177,7 +201,7 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <near>0.05</near>
+          <near>0.001</near>
           <far>300</far>
         </clip>
         <noise>
@@ -195,12 +219,12 @@
         <cameraName>front_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>front_camera</frameName>
+        <frameName>front_camera_optical_frame</frameName>
         <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
+        <distortionK1>-0.224</distortionK1>
+        <distortionK2>0.0372</distortionK2>
+        <distortionK3>-0.000445</distortionK3>
+        <distortionT1>0.00104</distortionT1>
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
@@ -224,8 +248,15 @@
 		<origin xyz="0.142 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
 	</joint>
 
+	<joint name="right_camera_optical_link" type="fixed">
+		<origin xyz="0 0 0" rpy=" 0 -1.57079632679 1.57079632679" />
+		<parent link="right_camera" />
+		<child link="right_camera_optical_frame" />
+	</joint>
+	<link name="right_camera_optical_frame"/>
+	
 <!-- camera -->
-  <gazebo reference="right_camera">
+  <gazebo reference="right_camera_optical_frame">
     <sensor type="camera" name="right_camera">
       <update_rate>10.0</update_rate>
       <camera name="right_camera">
@@ -236,7 +267,7 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <near>0.05</near>
+          <near>0.001</near>
           <far>300</far>
         </clip>
         <noise>
@@ -254,12 +285,12 @@
         <cameraName>right_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>right_camera</frameName>
+        <frameName>right_camera_optical_frame</frameName>
         <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
+        <distortionK1>-0.224</distortionK1>
+        <distortionK2>0.0372</distortionK2>
+        <distortionK3>-0.000445</distortionK3>
+        <distortionT1>0.00104</distortionT1>
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
@@ -282,8 +313,15 @@
 		<origin xyz="0 -0.142 0" rpy="1.57079632679 3.14159265359 0"/>
 	</joint>
 
+	<joint name="back_camera_optical_link" type="fixed">
+		<origin xyz="0 0 0" rpy=" 0 -1.57079632679 1.57079632679" />
+		<parent link="back_camera" />
+		<child link="back_camera_optical_frame" />
+	</joint>
+	<link name="back_camera_optical_frame"/>
+	
 <!-- camera -->
-  <gazebo reference="back_camera">
+  <gazebo reference="back_camera_optical_frame">
     <sensor type="camera" name="back_camera">
       <update_rate>10.0</update_rate>
       <camera name="back_camera">
@@ -294,7 +332,7 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <near>0.05</near>
+          <near>0.001</near>
           <far>300</far>
         </clip>
         <noise>
@@ -314,10 +352,10 @@
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>back_camera</frameName>
         <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
+        <distortionK1>-0.224</distortionK1>
+        <distortionK2>0.0372</distortionK2>
+        <distortionK3>-0.000445</distortionK3>
+        <distortionT1>0.00104</distortionT1>
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
@@ -341,11 +379,19 @@
 		<origin xyz="-0.142 0 0" rpy="1.57079632679 3.14159265359 -1.57079632679"/>
 	</joint>
 
+	<joint name="left_camera_optical_link" type="fixed">
+		<origin xyz="0 0 0" rpy=" 0 -1.57079632679 1.57079632679" />
+		<parent link="left_camera" />
+		<child link="left_camera_optical_frame" />
+	</joint>
+	<link name="left_camera_optical_frame"/>
+	
 
 	<!-- camera -->
-  <gazebo reference="left_camera">
+  <gazebo reference="left_camera_optical_frame">
     <sensor type="camera" name="left_camera">
       <update_rate>10.0</update_rate>
+	<visualize> true </visualize>
       <camera name="left_camera">
         <horizontal_fov>2.96706</horizontal_fov>
         <image>
@@ -354,7 +400,7 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <near>0.05</near>
+          <near>0.001</near>
           <far>300</far>
         </clip>
         <noise>
@@ -374,11 +420,14 @@
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>left_camera</frameName>
         <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
+        <distortionK1>-25</distortionK1>
+        <distortionK2>0.12</distortionK2>
+        <distortionK3>0</distortionK3>
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
+	<distortion>
+	<center>0.5 0.5</center>
+	</distortion>
       </plugin>
     </sensor>
   </gazebo>
