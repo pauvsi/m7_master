@@ -264,7 +264,7 @@
 
 
 <!--SYSTEM NODES-->
-    
+    <param name="use_sim_time" value="true" />
      <node pkg="pauvsi_trajectory" type="virtual_flight_controller" name="flight_controller" output="screen"/>
     
     <node pkg="pauvsi_trajectory" type="trajectory_server" name="trajectory_server" output="screen"/>

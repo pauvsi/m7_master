@@ -27,7 +27,7 @@
 #include <deque>
 
 //set false if estimating state another way
-#define USE_GAZEBO_GROUND_TRUTH true
+#define USE_GAZEBO_GROUND_TRUTH false
 
 
 pauvsi_trajectory::trajectoryGeneration::Request generateTrajectoryRequest(WaypointTrajectory traj);
