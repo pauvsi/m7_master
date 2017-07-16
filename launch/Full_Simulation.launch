@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+
+<launch>
+   
+   <param name="use_sim_time" value="true" />
+   
+  <arg name="gui" default="true"/>
+  <arg name="roomba" default="true"/>
+
+  <env name="GAZEBO_MODEL_PATH" value="$(find test_environment)"/>
+
+   <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find test_environment)/worlds/empty_world_test.world"/>
+    <arg name="gui" value="$(arg gui)"/> 
+
+   </include>
+
+ <group ns ="Rsim1">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="1" />
+    <param name="model_name" type="str" value="roomba1" />
+	 </node>
+ </group>
+
+<param name="robot_description1" textfile="$(find roomba)/sdf/roomba.sdf" />
+    <node
+      name="spawn_model1"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description1 -model roomba1 -x 1 -y 0 -z 0 -Y 0 -namespace Rsim1"
+      >
+</node>
+
+
+ <group ns = "Rsim2">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="2" />
+    <param name="model_name" type="str" value="roomba2" />
+	 </node>
+ </group>
+
+<param name="robot_description2" textfile="$(find roomba)/sdf/roomba.sdf" />
+    <node
+      name="spawn_model2"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description2 -model roomba2 -x 0.80901671853 -y 0.58778563195 -z 0 -Y 0.628319 -namespace Rsim2"
+      >
+</node>
+
+
+ <group ns = "Rsim3">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="3" />
+    <param name="model_name" type="str" value="roomba3" />
+	 </node>
+ </group>
+
+<param name="robot_description3" textfile="$(find roomba)/sdf/roomba.sdf" />
+    <node
+      name="spawn_model3"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description3 -model roomba3 -x 0.30901419963 -y 0.95105742435 -z 0 -Y 1.25664 -namespace Rsim3"
+      >
+</node>
+
+
+ <group ns = "Rsim4">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="4" />
+    <param name="model_name" type="str" value="roomba4" />
+	 </node>
+ </group>
+
+<param name="robot_description4" textfile="$(find roomba)/sdf/roomba.sdf" />
+    <node
+      name="spawn_model4"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description4 -model roomba4 -x -0.30902118648 -y 0.95105515418 -z 0 -Y 1.88496 -namespace Rsim4"
+      >
+</node>
+
+
+ <group ns = "Rsim5">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="5" />
+    <param name="model_name" type="str" value="roomba5" />
+	 </node>
+ </group>
+
+<param name="robot_description5" textfile="$(find roomba)/sdf/roomba.sdf" />
+    <node
+      name="spawn_model5"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description5 -model roomba5 -x -0.809014571 -y 0.58778858776 -z 0 -Y 2.51327 -namespace Rsim5"
+      >
+</node>
+
+
+ <group ns = "Rsim6">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="6" />
+    <param name="model_name" type="str" value="roomba6" />
+	 </node>
+ </group>
+
+<param name="robot_description6" textfile="$(find roomba)/sdf/roombaGreen.sdf" />
+    <node
+      name="spawn_model6"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description6 -model roomba6 -x -1 -y 0 -z 0 -Y 3.14159265359 -namespace Rsim6"
+      >
+</node>
+
+
+ <group ns = "Rsim7">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="7" />
+    <param name="model_name" type="str" value="roomba7" />
+	 </node>
+ </group>
+
+<param name="robot_description7" textfile="$(find roomba)/sdf/roombaGreen.sdf" />
+    <node
+      name="spawn_model7"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description7 -model roomba7 -x -0.80901769049 -y -0.58778429416 -z 0 -Y 3.76991 -namespace Rsim7"
+      >
+</node>
+
+
+ <group ns = "Rsim8">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="8" />
+    <param name="model_name" type="str" value="roomba8" />
+	 </node>
+ </group>
+
+<param name="robot_description8" textfile="$(find roomba)/sdf/roombaGreen.sdf" />
+    <node
+      name="spawn_model8"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description8 -model roomba8 -x -0.30901672334 -y -0.95105660435 -z 0 -Y 4.39823 -namespace Rsim8"
+      >
+</node>
+
+
+ <group ns = "Rsim9">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="9" />
+    <param name="model_name" type="str" value="roomba9" />
+	 </node>
+ </group>
+
+<param name="robot_description9" textfile="$(find roomba)/sdf/roombaGreen.sdf" />
+    <node
+      name="spawn_model9"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description9 -model roomba9 -x 0.30901866277 -y -0.95105597419 -z 0 -Y 5.02655 -namespace Rsim9"
+      >
+</node>
+
+
+ <group ns = "Rsim10">
+   <node pkg="roomba" type="roombaSim" name="roombaSim" >
+		<param name="seed_value" type="int" value="10" />
+    <param name="model_name" type="str" value="roomba10" />
+	 </node>
+ </group>
+
+<param name="robot_description10" textfile="$(find roomba)/sdf/roombaGreen.sdf" />
+    <node
+      name="spawn_model10"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description10 -model roomba10 -x 0.80901888911 -y -0.58778264439 -z 0 -Y 5.65487 -namespace Rsim10"
+      >
+</node>
+
+
+<group ns = "Obssim1">
+   <node pkg="roomba" type="obstacleSim" name="obstacleSim" >
+    <param name="model_name" type="str" value="obstacle1" />
+	 </node>
+</group>
+
+<param name="robot_description11" textfile="$(find roomba)/sdf/obstacle.sdf" />
+    <node
+      name="spawn_model11"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description11 -model obstacle1 -x 5 -y 0 -z 0 -Y -1.57079632679 -namespace Obssim1"
+      >
+</node>
+
+<group ns = "Obssim2">
+   <node pkg="roomba" type="obstacleSim" name="obstacleSim" >
+    <param name="model_name" type="str" value="obstacle2" />
+	 </node>
+</group>
+
+<param name="robot_description12" textfile="$(find roomba)/sdf/obstacle.sdf" />
+    <node
+      name="spawn_model12"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description12 -model obstacle2 -x 0 -y 5 -z 0 -Y 0 -namespace Obssim2"
+      >
+</node>
+
+<group ns = "Obssim3">
+   <node pkg="roomba" type="obstacleSim" name="obstacleSim" >
+    <param name="model_name" type="str" value="obstacle3" />
+	 </node>
+</group>
+
+<param name="robot_description13" textfile="$(find roomba)/sdf/obstacle.sdf" />
+    <node
+      name="spawn_model13"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description13 -model obstacle3 -x -5 -y 0 -z 0 -Y 1.57079632679 -namespace Obssim3"
+      >
+</node>
+
+<group ns = "Obssim4">
+   <node pkg="roomba" type="obstacleSim" name="obstacleSim" >
+    <param name="model_name" type="str" value="obstacle4" />
+	 </node>
+</group>
+
+<param name="robot_description14" textfile="$(find roomba)/sdf/obstacle.sdf" />
+    <node
+      name="spawn_model14"
+      pkg="gazebo_ros"
+      type="spawn_model"
+      args="-sdf -param robot_description14 -model obstacle4 -x 0 -y -5 -z 0 -Y 3.14159265359 -namespace Obssim4"
+      >
+</node>
+
+
+ 
+<!--
+  < Spawn simulated quadrotor uav ->
+  <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch" >
+    <arg name="model" value="$(find hector_quadrotor_description)/urdf/quadrotor_hokuyo_utm30lx.gazebo.xacro"/> 
+  </include>
+-->
+<param name="quadrotor" textfile="$(find m7_master)/urdf/m7_robot.urdf" />
+		<node
+			name="spawn_model_rotor"
+			pkg="gazebo_ros"
+			type="spawn_model"
+			args="-urdf -param quadrotor -model quadrotor -x 9.5 -y -9.5 -z 1"
+		>
+</node>
+
+
+<!--SYSTEM NODES-->
+    
+     <node pkg="pauvsi_trajectory" type="virtual_flight_controller" name="flight_controller" output="screen"/>
+    
+    <node pkg="pauvsi_trajectory" type="trajectory_server" name="trajectory_server" output="screen"/>
+    
+    <node pkg="m7_master" type="master" name="master_node" output="screen"/>
+   
+</launch>

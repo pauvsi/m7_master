@@ -124,14 +124,14 @@ int main(int argc, char **argv){
 	ros::Rate loop_rate(MASTER_RATE);
 
 	HighLevelGoal hover;
-	hover.hover_pos << -9, -9, .5;
+	hover.hover_pos << 9, -9, .5;
 	hover.type = HighLevelGoal::HOVER;
 	goalQueue.push_front(hover);
 
 
 	ROS_DEBUG("generating the request for trajectory");
 	WaypointTrajectory traj;
-	traj.start.state.pos << -9, -9, 0.5;
+	traj.start.state.pos << 9, -9, 0.5;
 	traj.start.state.vel << 0, 0, 0;
 	traj.start.state.accel << 0, 0, 0;
 	traj.start.state.jerk << 0, 0, 0;
@@ -170,18 +170,18 @@ int main(int argc, char **argv){
 	HighLevelGoal trajGoal;
 	trajGoal.type = HighLevelGoal::FOLLOW_TRAJECTORY;
 
-	ROS_DEBUG("waiting for trajectory generator");
+	ROS_INFO("waiting for trajectory generator");
 	traj_client.waitForExistence();
 
-	ros::Duration wait(2);
-	wait.sleep();
+	//ros::Duration wait(2);
+	//wait.sleep();
 
 	trajGoal.traj = ExecutableTrajectory(requestTrajectory(req), ros::Time::now() + ros::Duration(5)); // 5 seconds from now
 
 	goalQueue.push_back(trajGoal);
 
-	ros::Duration wait2(2);
-	wait2.sleep();
+	//ros::Duration wait2(2);
+	//wait2.sleep();
 
 	//traj_client.shutdown();
 	//ros::shutdown();
@@ -546,6 +546,8 @@ void twistCallback(const geometry_msgs::TwistStampedConstPtr msg)
 
 void gtCallback(const nav_msgs::OdometryConstPtr& msg)
 {
+	ROS_INFO("got ground truth");
+
 	Eigen::Vector3d newVel;
 	newVel << msg->twist.twist.linear.x, msg->twist.twist.linear.y, msg->twist.twist.linear.z;
 
