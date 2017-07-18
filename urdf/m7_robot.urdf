@@ -672,7 +672,273 @@
 		<parent link="base_link" />
 		<child  link="leg4_link" />
 		<origin rpy="0 0 2.3562 " xyz="-0.272885 0.272885 0.1" />
-	</joint>			
+	</joint>		
+	
+	<!-- ARM -->
+	<!-- Change link origin for point of rotation of servo -->
+	<!-- servo1 -->	
+	<link name="servo_1">
+    <inertial>
+      <origin xyz="0.0 0 0" /> 
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.0316 0.0430 0.048224" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 0" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.0316 0.0430 0.048224" />
+	
+		</geometry>
+		<material name="red" />
+	</visual>
+		
+	</link>
+	
+	<joint name="bottom_to_servo1" type="fixed">
+		<origin xyz="-0.112 -0.07 0.005" />
+	    <parent link="bottom_box"/>
+		<child link="servo_1" />
+	</joint>
+
+<!-- 
+	<joint name="bottom_to_servo1" type="revolute">
+	    <limit effort="1000.0" lower="-1.57079632679" upper="1.57079632679" velocity="0.5"/>		
+		<origin xyz="-0.112 -0.07 0.005" />
+		<axis xyz="1 0 0" />
+	    <parent link="bottom_box"/>
+		<child link="servo_1" />
+	</joint>
+-->
+	<!-- bone1 -->
+	<link name="bone_1">
+	<origin xyz="0.0 0 -0.0675136" />
+	 
+	<inertial>  
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.025 0.03 0.1350272" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 -0.0675136" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.025 0.03 0.1350272" />
+	
+		</geometry>
+		<material name="gray" />
+	</visual>		
+	</link>
+	
+	<joint name="servo1_to_bone1" type="fixed">
+		<origin xyz="0 0 -0.028832" />
+		<parent link="servo_1" />
+		<child link="bone_1" />
+	</joint>
+	
+	<!--  servo2 -->
+ 	<link name="servo_2">
+      <origin xyz="0.0 0 -0.013312" /> 
+	<inertial>
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.0316 0.0430 0.048224" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 -0.013312" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.0316 0.0430 0.048224" />
+	
+		</geometry>
+		<material name="red" />
+	</visual>		
+	</link>
+	
+	<joint name="bone1_to_servo2" type="fixed">
+		<origin xyz="0 0  -0.1578272" />
+		<parent link="bone_1" />
+		<child link="servo_2" />
+	</joint>
+
+	<!--  servo3 rotates -->
+ 	<link name="servo_3">
+      <origin xyz="0.0 0 -0.013312" /> 
+	<inertial>
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.0316 0.0430 0.048224" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 -0.013312" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.0316 0.0430 0.048224" />
+	
+		</geometry>
+		<material name="red" />
+	</visual>		
+	</link>
+	
+	<joint name="servo2_to_servo3" type="fixed">
+		<origin xyz="0 0 -0.070724" />
+		<parent link="servo_2" />
+		<child link="servo_3" />
+	</joint>
+	
+	<!-- bone2 -->
+	<link name="bone_2">
+		<origin xyz="0.0 0 -0.08062" />
+	 
+	<inertial>  
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.025 0.03 0.16124" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 -0.08062" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.025 0.03 0.16124" />
+	
+		</geometry>
+		<material name="gray" />
+	</visual>
+	</link>
+	
+	<joint name="servo3_to_bone2" type="fixed">
+		<origin xyz="0 0 -0.042144" />
+		<parent link="servo_3" />
+		<child link="bone_2" />
+	</joint>
+	
+	<!--  servo4 -->
+	<link name="servo_4">
+      <origin xyz="0.0 0 -0.024112" /> 
+	<inertial>
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.0316 0.0430 0.048224" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 -0.024112" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.0316 0.0430 0.048224" />
+	
+		</geometry>
+		<material name="red" />
+	</visual>		
+	</link>
+	
+	<joint name="bone2_to_servo4" type="fixed">
+		<origin xyz="0 0 -0.16596"/>
+		<parent link="bone_2" />
+		<child link="servo_4" />
+	</joint>
+	
+		<!-- bone3 -->
+	<link name="bone_3">
+		<origin xyz="0.0 0 -0.051035" />
+	 
+	<inertial>  
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.025 0.03 0.10207" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 -0.051035" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.025 0.03 0.10207" />
+	
+		</geometry>
+		<material name="gray" />
+	</visual>
+	</link>
+	
+	<joint name="servo4_to_bone3" type="fixed">
+		<origin xyz="0 0 -0.070724" />
+		<parent link="servo_4" />
+		<child link="bone_3" />
+	</joint>
+	
+	<!-- servo5 -->
+		<link name="servo_5">
+      <origin xyz="0.0 0 0.013312" /> 
+	<inertial>
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0"  ixz="0"  iyy="1.0"  iyz="0"  izz="1.0" />
+    </inertial>
+		<collision>
+			<geometry>
+				<box size="0.0316 0.0430 0.048224" />
+			</geometry>
+		</collision>
+	
+	<visual>
+	   <origin xyz="0 0 0.013312" rpy="0 0 0" />
+		<geometry>
+		   <box size="0.0316 0.0430 0.048224" />
+	
+		</geometry>
+		<material name="red" />
+	</visual>		
+	</link>
+	
+	<joint name="bone3_to_servo5" type="fixed">
+		<origin xyz="0 0 -0.144194"/>
+		<parent link="bone_3" />
+		<child link="servo_5" />
+	</joint>
+<!-- 	
+	
+	<joint name="bone3_to_servo5" type="fixed">
+		<origin xyz="0 0 -0.161994"/>
+		<parent link="bone_3" />
+		<child link="servo_5" />
+	</joint>
+	
+-->	
+<!-- 
+	<joint name="bottom_to_servo_one" type="revolute">
+		<parent link="base_link" />
+		<child link="servo_one" />
+		<origin xyz="0 0.5 0" rpy="0 0 0"/>
+		
+		<axis xyz="0 1 0" />
+		<limit lower="-1.57079632679" upper="1.57079632679" effort="30.0" velocity="2.0" />
+	</joint>
+-->
 	
 	<!-- MOTORS -->
 	
