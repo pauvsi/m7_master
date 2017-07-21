@@ -7,9 +7,11 @@
       <remap from="joint_states" to="/arm/jointStates" />
     </node>
     
-    
+   
     
     <node name="rviz" pkg="rviz" type="rviz" />
+    
+    <node pkg="m7_master" type="arm_sim" name="arm_simulator" />
     
     <node pkg="pauvsi_trajectory" type="virtual_flight_controller" name="flight_controller" output="screen"/>
     

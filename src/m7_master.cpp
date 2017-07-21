@@ -7,6 +7,7 @@
 #include "ros/ros.h"
 #include <eigen3/Eigen/Geometry>
 
+
 #include "std_msgs/Float64MultiArray.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/TwistStamped.h"
@@ -21,8 +22,8 @@
 
 #include "../include/m7_master/Physics.h"
 
-#include "../include/m7_master/roombaCallback.hpp"
-
+//#include "../include/m7_master/roombaCallback.hpp"
+#include "../include/m7_master/ArmController.h"
 
 #include <deque>
 
@@ -71,6 +72,10 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "mission_7_master_node");
 
 	ros::NodeHandle nh;
+
+	ROS_DEBUG("Starting AsyncSpinner");
+	ros::AsyncSpinner spinner(1);
+	spinner.start();
 
 	state = State(ros::Time::now());
 
@@ -127,6 +132,13 @@ int main(int argc, char **argv){
 	hover.hover_pos << 9, -9, .5;
 	hover.type = HighLevelGoal::HOVER;
 	goalQueue.push_front(hover);
+
+	ROS_DEBUG("setup MoveIT");
+	static const std::string PLANNING_GROUP = "arm";
+	moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
+	const robot_state::JointModelGroup* joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
+	ROS_DEBUG_STREAM("MoveIT: Reference frame: "<<move_group.getPlanningFrame());
+	ROS_DEBUG_STREAM("MoveIT: End effector link: "<<move_group.getPlanningFrame());
 
 
 	ROS_DEBUG("generating the request for trajectory");

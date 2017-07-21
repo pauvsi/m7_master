@@ -12,6 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   nav_msgs
   pauvsi_trajectory
+  moveit_ros_planning_interface
+  moveit_core
+  moveit_visual_tools
+  moveit_ros_planning
 )
 
 find_package(Eigen3 REQUIRED)
@@ -58,12 +62,18 @@ add_library(NeuralNet include/m7_master/runNN.hpp)
 set_target_properties(NeuralNet PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(NeuralNet types_master)
 
+add_library(ArmController include/m7_master/ArmController.h)
+set_target_properties(ArmController PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(ArmController ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
 add_library(pid include/m7_master/PID.h)
 set_target_properties(pid PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(pid ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
 add_executable(master src/m7_master.cpp)
-target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} roomba_callback NeuralNet polynomial_master types_master pid physics)
+target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} roomba_callback NeuralNet ArmController polynomial_master types_master pid physics)
 
 add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(arm_sim src/arm_sim.cpp)
+target_link_libraries(arm_sim ${catkin_LIBRARIES})
