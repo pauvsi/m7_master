@@ -16,15 +16,20 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_core
   moveit_visual_tools
   moveit_ros_planning
+  actionlib_msgs
+  control_msgs
+  actionlib
+  trajectory_msgs
 )
 
 find_package(Eigen3 REQUIRED)
 
+generate_messages(DEPENDENCIES actionlib_msgs)
 
 catkin_package(
  	INCLUDE_DIRS include
 #  LIBRARIES pauvsi_vio
-  CATKIN_DEPENDS roscpp pauvsi_trajectory
+  CATKIN_DEPENDS roscpp pauvsi_trajectory actionlib actionlib_msgs
 #  DEPENDS system_lib
    DEPENDS eigen
    
@@ -77,3 +82,8 @@ add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TA
 
 add_executable(arm_sim src/arm_sim.cpp)
 target_link_libraries(arm_sim ${catkin_LIBRARIES})
+
+add_executable(arm_test src/arm_test.cpp)
+target_link_libraries(arm_test ${catkin_LIBRARIES} ${Eigen_LIBRARIES})
+add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+

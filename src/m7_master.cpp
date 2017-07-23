@@ -25,7 +25,6 @@
 //#include "../include/m7_master/roombaCallback.hpp"
 #include "../include/m7_master/ArmController.h"
 
-#include <deque>
 
 //set false if estimating state another way
 #define USE_GAZEBO_GROUND_TRUTH true
@@ -38,22 +37,21 @@ void poseCallback(const geometry_msgs::PoseStampedConstPtr msg);
 void twistCallback(const geometry_msgs::TwistStampedConstPtr msg);
 void gtCallback(const nav_msgs::OdometryConstPtr& msg);
 
-DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals);
+DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals, moveit::planning_interface::MoveGroupInterface& move_group, int idx = -1);
 std_msgs::Float64MultiArray computeMotorForces(DesiredState desired);
 
 
 
-std::deque<HighLevelGoal> goalQueue; // stores the high level control goals
 
 PID positionPID, momentPID;
 Eigen::Matrix3d P_pos, I_pos, D_pos, P_moment, D_moment;
 
 PhysicalCharacterisics phys;
 
-State state;
 
 
 ros::ServiceClient traj_client;
+
 #if USE_GAZEBO_GROUND_TRUTH
 ros::Subscriber gt_sub;
 #else
@@ -73,9 +71,12 @@ int main(int argc, char **argv){
 
 	ros::NodeHandle nh;
 
-	ROS_DEBUG("Starting AsyncSpinner");
-	ros::AsyncSpinner spinner(1);
-	spinner.start();
+//	ROS_DEBUG("Starting AsyncSpinner");
+//	ros::AsyncSpinner spinner(1);
+//	spinner.start();
+//
+	ROS_DEBUG("Setting up Arm Client");
+	arm_client = new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>("arm_trajectory", true);
 
 	state = State(ros::Time::now());
 
@@ -89,6 +90,13 @@ int main(int argc, char **argv){
 	pose_sub = nh.subscribe(POSE_TOPIC, 1, poseCallback);
 	twist_sub = nh.subscribe(TWIST_TOPIC, 1, twistCallback);
 #endif
+
+	ROS_INFO_STREAM("Setting up Arm Client");
+	arm_client = new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>("arm_trajectory", true);
+
+	ROS_INFO_STREAM("Waiting for arm trajectory generator");
+		arm_client->waitForServer();
+
 
 	roomba1 = nh.subscribe("roomba/roomba1", 1, roombaCallbackOne);
 	roomba2 = nh.subscribe("roomba/roomba2", 1, roombaCallbackTwo);
@@ -125,25 +133,43 @@ int main(int argc, char **argv){
 	phys.min_motor_thrust = MOTOR_FORCE_MIN;
 	phys.torqueTransition << TORQUE_TRANSITION;
 	phys.torqueTransition_inv = phys.torqueTransition.inverse();
-
+//
 	ros::Rate loop_rate(MASTER_RATE);
-
+//
 	HighLevelGoal hover;
-	hover.hover_pos << 9, -9, .5;
+	hover.hover_pos << 9, -9, 0.4;
 	hover.type = HighLevelGoal::HOVER;
 	goalQueue.push_front(hover);
+
+//	ROS_DEBUG("Waiting for arm trajectory generator");
+//		arm_client.waitForExistence();
 
 	ROS_DEBUG("setup MoveIT");
 	static const std::string PLANNING_GROUP = "arm";
 	moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
-	const robot_state::JointModelGroup* joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
-	ROS_DEBUG_STREAM("MoveIT: Reference frame: "<<move_group.getPlanningFrame());
-	ROS_DEBUG_STREAM("MoveIT: End effector link: "<<move_group.getPlanningFrame());
+	const robot_state::JointModelGroup *joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
+//
+//	  namespace rvt = rviz_visual_tools;
+//	  moveit_visual_tools::MoveItVisualTools visual_tools("odom_combined");
+//	  visual_tools.deleteAllMarkers();
+//
+//	  visual_tools.loadRemoteControl();
+//
+//	  Eigen::Affine3d text_pose = Eigen::Affine3d::Identity();
+//	  text_pose.translation().z() = 1.75; // above head of PR2
+//	  visual_tools.publishText(text_pose, "MoveGroupInterface Demo", rvt::WHITE, rvt::XLARGE);
+//
+//	  // Batch publishing is used to reduce the number of messages being sent to Rviz for large visualizations
+//	visual_tools.trigger();
+//
+//
+//	ROS_WARN_STREAM("MoveIT: Reference frame: "<<move_group.getPlanningFrame());
+//	ROS_WARN_STREAM("MoveIT: End effector link: "<<move_group.getPlanningFrame());
 
 
 	ROS_DEBUG("generating the request for trajectory");
 	WaypointTrajectory traj;
-	traj.start.state.pos << 9, -9, 0.5;
+	traj.start.state.pos << 9, -9, 0.4;
 	traj.start.state.vel << 0, 0, 0;
 	traj.start.state.accel << 0, 0, 0;
 	traj.start.state.jerk << 0, 0, 0;
@@ -199,7 +225,45 @@ int main(int argc, char **argv){
 	//ros::shutdown();
 	//return 0;
 
-	ROS_DEBUG("starting main loop");
+//	ROS_DEBUG("starting main loop");
+//	  geometry_msgs::Pose target_pose1;
+//	  target_pose1.orientation.w = 1.0;
+//	  target_pose1.position.x = 0.28;
+//	  target_pose1.position.y = -0.7;
+//	  target_pose1.position.z = -1.0;
+//	move_group.setPositionTarget(0, 0, 0, "bone_3");
+//
+//	moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+//	my_plan.trajectory_.joint_trajectory.
+//	bool success = move_group.plan(my_plan);
+//	 ROS_INFO("Visualizing plan 1 (pose goal) %s",success?"":"FAILED");
+//	  visual_tools.publishAxisLabeled(target_pose1, "pose1");
+//	  visual_tools.publishText(text_pose, "Pose Goal", rvt::WHITE, rvt::XLARGE);
+//	  visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+//	visual_tools.trigger();
+//	move_group.move();
+
+//	moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
+//	  ROS_WARN_STREAM("Var Pos: "<<current_state->getVariablePosition("servo4_to_bone3")<<" "<<current_state->getVariablePosition(1)<<current_state->getVariablePosition(2)<<" "<<current_state->getVariablePosition(3)<<" "<<current_state->getVariablePosition(4)<<" "<<current_state->getVariablePosition(5));
+//	  // Next get the current set of joint values for the group.
+//	  std::vector<double> joint_group_positions;
+//	  current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+//
+//	  // Now, let's modify one of the joints, plan to the new joint space goal and visualize the plan.
+//	  joint_group_positions[3] = -1.0;  // radians
+//	  move_group.setJointValueTarget(joint_group_positions);
+//
+//	  success = move_group.plan(my_plan);
+//	  ROS_INFO_NAMED("tutorial", "Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
+//
+//	  // Visualize the plan in Rviz
+//	  visual_tools.deleteAllMarkers();
+//	  visual_tools.publishText(text_pose, "Joint Space Goal", rvt::WHITE, rvt::XLARGE);
+//	  visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+//	  visual_tools.trigger();
+//	visual_tools.prompt("next step");
+
+//	moveToTarget(move_group, joint_model_group, target, true);
 
 	while(ros::ok())
 	{
@@ -210,7 +274,7 @@ int main(int argc, char **argv){
 		//WHEN CALLED WITHOUT GOAL WILL HOVER IN PLACE - CAUTION
 		if(executing)
 		{
-			force_pub.publish(computeMotorForces(getDesiredStateAndUpdateGoals(goalQueue)));
+			force_pub.publish(computeMotorForces(getDesiredStateAndUpdateGoals(goalQueue, move_group)));
 		}
 
 
@@ -462,8 +526,12 @@ std_msgs::Float64MultiArray computeMotorForces(DesiredState desired)
 
 /*
  * this function checks if goal is obsolete and computes the current desired state
+ * arm_status: 1 folded
+ * 			   2 resting
+ * 			   3 instant pre tap
+ * 			   4 Tap
  */
-DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals)
+DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals,moveit::planning_interface::MoveGroupInterface& move_group, int idx)
 {
 	DesiredState ds;
 
@@ -472,6 +540,8 @@ DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals)
 	// if there is no goal hover in place
 	if(goals.size() == 0)
 	{
+
+		move_arm(move_group, RESTING);
 		HighLevelGoal hover;
 		hover.type = HighLevelGoal::HOVER;
 		hover.hover_pos = state.pos;
@@ -517,7 +587,58 @@ DesiredState getDesiredStateAndUpdateGoals(std::deque<HighLevelGoal>& goals)
 
 		ROS_DEBUG_STREAM("desired acceleration: " << ds.accel.transpose());
 	}
+	else if(goals.front().type == HighLevelGoal::TRACK)
+	{
+		if(HitCount <= 0)
+		{
+			goals.pop_front();
+			move_arm(move_group, RESTING);
+			HitCount = -1;
+			goto top;
+		}
 
+//		double t = ros::Time::now().toSec() - goals.front().traj.finishTime.toSec();
+
+
+		//ds = polyVal(goals.front().traj.traj, t);
+		//ROS_DEBUG_STREAM("desired acceleration: " << ds.accel.transpose());
+		if(arm_status != 4)
+		{
+			if((fabs(state.pos(0,0) - roombaPose[idx].pose.pose.position.x) < 0.1 ) && (fabs(state.pos(1,0) - roombaPose[idx].pose.pose.position.y) < 0.1))
+			{
+				if(arm_client->getState().state_ == actionlib::SimpleClientGoalState::SUCCEEDED )
+				{
+									move_arm(move_group, TAP);
+				//						arm_status = 4;
+
+				}
+			}
+
+
+		}
+		else if(arm_status == 4)
+		{
+			if(arm_client->getState().state_ == actionlib::SimpleClientGoalState::SUCCEEDED)
+			{
+				move_arm(move_group, PRE_TAP);
+//				arm_status = 3;
+				HitCount--;
+			}
+		}
+//		move_arm(move_group, TAP);
+
+		ds.pos <<roombaPose[idx].pose.pose.position.x, roombaPose[idx].pose.pose.position.y, 0;
+		ds.vel << roombaPose[idx].pose.pose.orientation.x, roombaPose[idx].pose.pose.orientation.y, 0;
+		ds.accel << 0, 0, 0;
+		ds.jerk << 0, 0, 0;
+		ds.snap << 0, 0, 0;
+
+
+	}
+	else
+	{
+		ROS_FATAL("No High Level Goal Found!!");
+	}
 	return ds;
 }
 

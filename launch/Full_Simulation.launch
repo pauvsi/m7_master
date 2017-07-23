@@ -16,6 +16,7 @@
    </include>
 
 
+
  <group ns ="Rsim1">
    <node pkg="roomba" type="roombaSim" name="roombaSim" >
 		<param name="seed_value" type="int" value="1" />

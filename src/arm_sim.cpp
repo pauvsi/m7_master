@@ -31,7 +31,7 @@ while (ros::ok()) {
     joint_state.position[0] = 0;
     joint_state.position[1] = 0;
     joint_state.position[2] = 0;
-    joint_state.position[3] = rot4*degree;
+    joint_state.position[3] = 0;//rot4*degree;
 
     // update transform
     // (moving in a circle with radius=2)

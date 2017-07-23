@@ -1,0 +1,7 @@
+<launch>
+
+	<include file="$(find arm_moveit_generated)/launch/demo.launch" />
+
+	<node name="master" pkg="m7_master" type="master" output="screen" />
+	
+</launch>

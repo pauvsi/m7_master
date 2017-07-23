@@ -9,11 +9,32 @@
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include "MasterTypes.h"
 #include <stdlib.h>
+#include <iterator>
+#include <sstream>
+#include <deque>
+#include <actionlib/client/simple_action_client.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
+
+
 
 #define NO_OBS 4
 #define NO_TARGETS 10
+#define TRACK_HEIGHT 0.6
+#define ROOMBA_CLEARANCE 2.0
 
+/*
+ * arm_status: 1 folded
+ * 			   2 resting
+ * 			   3 instant pre tap
+ * 			   4 Tap
+*/
+int arm_status;
+int HitCount;
+State state;
+std::deque<HighLevelGoal> goalQueue; // stores the high level control goals
 geometry_msgs::PoseWithCovarianceStamped roombaPose[10], obsPose[4];
+actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* arm_client;
+
 
 /*
  * TODO: Make sure the Population file path is correct in the java file
@@ -47,7 +68,7 @@ bool outOfBounds(int i)
  * 	Gets the index(zero indexed) and hitcount from the neural network
  * 	These values are stored in roombaTarget and hitCount respectively
  */
-void execNN(State state, int& roombaTarget, double& hitCount)
+void execNN(State state, std::vector<int>& roombaTarget, std::vector<double>& hitCount)
 {
 	double input[100];
 //	std::string command = "java -jar NN.jar ";
@@ -101,11 +122,57 @@ void execNN(State state, int& roombaTarget, double& hitCount)
 
 	}
 
+	//Outputs are sorted by preference. First output has the highest score.
 	std::string output = systemCall(command.str());
+	std::istringstream iss(output);
+	std::vector<std::string> results((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
 	//roombaTarget is zero indexed
-	roombaTarget =  std::stoi(output.substr(0,1));
-	hitCount = std::stod(output.substr(2));
+	int ctr = 0;
+	while(ctr < results.size())
+	{
+		roombaTarget.push_back(std::stoi(results[ctr++]));
+		hitCount.push_back(std::stod(results[ctr++])*7.0);
+	}
+
+//	roombaTarget =  std::stoi(output.substr(0,1));
+//	hitCount = std::stod(output.substr(2));
 //	int roombaTarget = std::stoi(output.substr(0, 1));
 //	double hitCount = std::stod(output.substr(2));
+}
+
+bool isRoombaAwayFromObs(int idx)
+{
+	for(auto& e: obsPose)
+	{
+		if(sqrt((roombaPose[idx].pose.pose.position.x - e.pose.pose.position.x)*(roombaPose[idx].pose.pose.position.x - e.pose.pose.position.x) +
+				(roombaPose[idx].pose.pose.position.y - e.pose.pose.position.y)*(roombaPose[idx].pose.pose.position.y - e.pose.pose.position.y)) < ROOMBA_CLEARANCE)
+			return false;
+	}
+
+	return true;
+}
+
+void chooseTargetAndUpdateGoal(int& idx)
+{
+	std::vector<int> target; std::vector<double> hitCount;
+	execNN(state, target, hitCount);
+	HighLevelGoal trackTarget;
+//	trackTarget.hover_pos<< roombaPose[target].pose.pose.position.x, roombaPose[target].pose.pose.position.y, TRACK_HEIGHT;
+	for(auto& e:target)
+	{
+		if(isRoombaAwayFromObs(e))
+		{
+			trackTarget.hover_pos<< roombaPose[e].pose.pose.position.x, roombaPose[e].pose.pose.position.y, TRACK_HEIGHT;
+			idx = e;
+			HitCount = (int)round(hitCount[e]);
+			break;
+		}
+	}
+
+	trackTarget.type = HighLevelGoal::TRACK;
+	goalQueue.push_front(trackTarget);
+
+	return;
+
 }
 
