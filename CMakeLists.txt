@@ -11,15 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
   nav_msgs
-  pauvsi_trajectory
-  moveit_ros_planning_interface
-  moveit_core
-  moveit_visual_tools
-  moveit_ros_planning
-  actionlib_msgs
-  control_msgs
-  actionlib
-  trajectory_msgs
 )
 
 find_package(Eigen3 REQUIRED)
@@ -48,42 +39,42 @@ include_directories(
 )
 
 
-add_library(polynomial_master include/m7_master/Polynomial.hpp)
-set_target_properties(polynomial_master PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(polynomial_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+#add_library(polynomial_master include/m7_master/Polynomial.hpp)
+#set_target_properties(polynomial_master PROPERTIES LINKER_LANGUAGE CXX)
+#target_link_libraries(polynomial_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
-add_library(physics include/m7_master/Physics.h)
-set_target_properties(physics PROPERTIES LINKER_LANGUAGE CXX)
+#add_library(physics include/m7_master/Physics.h)
+#set_target_properties(physics PROPERTIES LINKER_LANGUAGE CXX)
 
-add_library(roomba_callback include/m7_master/roombaCallback.hpp)
-set_target_properties(roomba_callback  PROPERTIES LINKER_LANGUAGE CXX)
+#add_library(roomba_callback include/m7_master/roombaCallback.hpp)
+#set_target_properties(roomba_callback  PROPERTIES LINKER_LANGUAGE CXX)
 
 
-add_library(types_master include/m7_master/MasterTypes.h)
-set_target_properties(types_master PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(types_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+#add_library(types_master include/m7_master/MasterTypes.h)
+#set_target_properties(types_master PROPERTIES LINKER_LANGUAGE CXX)
+#target_link_libraries(types_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
-add_library(NeuralNet include/m7_master/runNN.hpp)
-set_target_properties(NeuralNet PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(NeuralNet types_master)
+#add_library(NeuralNet include/m7_master/runNN.hpp)
+#set_target_properties(NeuralNet PROPERTIES LINKER_LANGUAGE CXX)
+#target_link_libraries(NeuralNet types_master)
 
-add_library(ArmController include/m7_master/ArmController.h)
-set_target_properties(ArmController PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(ArmController ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+#add_library(ArmController include/m7_master/ArmController.h)
+#set_target_properties(ArmController PROPERTIES LINKER_LANGUAGE CXX)
+#target_link_libraries(ArmController ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
-add_library(pid include/m7_master/PID.h)
-set_target_properties(pid PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(pid ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+#add_library(pid include/m7_master/PID.h)
+#set_target_properties(pid PROPERTIES LINKER_LANGUAGE CXX)
+#target_link_libraries(pid ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
-add_executable(master src/m7_master.cpp)
-target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} roomba_callback NeuralNet ArmController polynomial_master types_master pid physics)
+#add_executable(master src/m7_master.cpp)
+#target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} roomba_callback NeuralNet ArmController polynomial_master types_master pid physics)
 
-add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(arm_sim src/arm_sim.cpp)
-target_link_libraries(arm_sim ${catkin_LIBRARIES})
+#add_executable(arm_sim src/arm_sim.cpp)
+#target_link_libraries(arm_sim ${catkin_LIBRARIES})
 
-add_executable(arm_test src/arm_test.cpp)
-target_link_libraries(arm_test ${catkin_LIBRARIES} ${Eigen_LIBRARIES})
-add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_executable(arm_test src/arm_test.cpp)
+#target_link_libraries(arm_test ${catkin_LIBRARIES} ${Eigen_LIBRARIES})
+#add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 

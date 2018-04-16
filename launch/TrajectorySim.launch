@@ -1,22 +1,20 @@
 <launch>
 	
-	<param name="m7_description" command="cat $(find m7_master)/urdf/m7_robot.urdf" />
+    <param name="robot_description" command="cat $(find m7_master)/urdf/robot_description.urdf" />
 
-	<node pkg="robot_state_publisher" type="robot_state_publisher" name="m7_state_pub" >
-      <remap from="robot_description" to="m7_description" />
-      <remap from="joint_states" to="/arm/jointStates" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="m7_state_pub" >
     </node>
     
    
     
-    <node name="rviz" pkg="rviz" type="rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" /> 
     
-    <node pkg="m7_master" type="arm_sim" name="arm_simulator" />
+    <!--<node pkg="m7_master" type="arm_sim" name="arm_simulator" /> -->
     
-    <node pkg="pauvsi_trajectory" type="virtual_flight_controller" name="flight_controller" output="screen"/>
+    <!--<node pkg="pauvsi_trajectory" type="virtual_flight_controller" name="flight_controller" output="screen"/> -->
     
-    <node pkg="pauvsi_trajectory" type="trajectory_server" name="trajectory_server" output="screen"/>
+    <!-- <node pkg="pauvsi_trajectory" type="trajectory_server" name="trajectory_server" output="screen"/> -->
     
-    <node pkg="m7_master" type="master" name="master_node" output="screen"/>
+    <!-- <node pkg="m7_master" type="master" name="master_node" output="screen"/> -->
     
 </launch>
