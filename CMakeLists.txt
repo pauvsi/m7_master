@@ -54,27 +54,12 @@ include_directories(
 #set_target_properties(types_master PROPERTIES LINKER_LANGUAGE CXX)
 #target_link_libraries(types_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
-#add_library(NeuralNet include/m7_master/runNN.hpp)
-#set_target_properties(NeuralNet PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(NeuralNet types_master)
-
-#add_library(ArmController include/m7_master/ArmController.h)
-#set_target_properties(ArmController PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(ArmController ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
-
 #add_library(pid include/m7_master/PID.h)
 #set_target_properties(pid PROPERTIES LINKER_LANGUAGE CXX)
 #target_link_libraries(pid ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
 #add_executable(master src/m7_master.cpp)
-#target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} roomba_callback NeuralNet ArmController polynomial_master types_master pid physics)
+#target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} polynomial_master types_master pid physics)
 
-#add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-#add_executable(arm_sim src/arm_sim.cpp)
-#target_link_libraries(arm_sim ${catkin_LIBRARIES})
-
-#add_executable(arm_test src/arm_test.cpp)
-#target_link_libraries(arm_test ${catkin_LIBRARIES} ${Eigen_LIBRARIES})
-#add_dependencies(master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
