@@ -17,7 +17,7 @@
     <arg name="rcS" default="$(find mission7_master)/urdf/posix-configs/SITL/init/$(arg est)/$(arg vehicle)"/>
     <!-- gazebo configs -->
     <arg name="gui" default="true"/>
-    <arg name="debug" default="true"/>
+    <arg name="debug" default="false"/>
     <arg name="verbose" default="true"/>
     <arg name="paused" default="false"/>
     <arg name="respawn_gazebo" default="false"/>

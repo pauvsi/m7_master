@@ -38,7 +38,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>~/catkin_ws/src/mission7_master/urdf/noir_description/meshes/CF_assembly.stl</uri>
+            <uri>model://noir_description/meshes/CF_assembly.stl</uri>
           </mesh>
         </geometry>
         <material>
@@ -187,7 +187,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>~/catkin_ws/src/mission7_master/urdf/noir_description/meshes/prop18.stl</uri>
+            <uri>model://noir_description/meshes/prop18.stl</uri>
           </mesh>
         </geometry>
         <material>
@@ -253,7 +253,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>~/catkin_ws/src/mission7_master/urdf/noir_description/meshes/prop18.stl</uri>
+            <uri>model://noir_description/meshes/prop18.stl</uri>
           </mesh>
         </geometry>
         <material>
@@ -319,7 +319,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>~/catkin_ws/src/mission7_master/urdf/noir_description/meshes/prop18.stl</uri>
+            <uri>model://noir_description/meshes/prop18.stl</uri>
           </mesh>
         </geometry>
         <material>
@@ -385,7 +385,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>~/catkin_ws/src/mission7_master/urdf/noir_description/meshes/prop18.stl</uri>
+            <uri>model://noir_description/meshes/prop18.stl</uri>
           </mesh>
         </geometry>
         <material>
