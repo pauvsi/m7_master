@@ -13,12 +13,12 @@
     <arg name="est" default="ekf2"/>
     <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/empty.world"/>
     <arg name="vehicle" default="noir"/>
-    <arg name="sdf" default="$(find mission7_master)/urdf/$(arg vehicle)_base.urdf"/>
+    <arg name="sdf" default="$(find mission7_master)/urdf/$(arg vehicle).sdf"/>
     <arg name="rcS" default="$(find mission7_master)/urdf/posix-configs/SITL/init/$(arg est)/$(arg vehicle)"/>
     <!-- gazebo configs -->
     <arg name="gui" default="true"/>
-    <arg name="debug" default="false"/>
-    <arg name="verbose" default="false"/>
+    <arg name="debug" default="true"/>
+    <arg name="verbose" default="true"/>
     <arg name="paused" default="false"/>
     <arg name="respawn_gazebo" default="false"/>
     <!-- MAVROS connection -->
