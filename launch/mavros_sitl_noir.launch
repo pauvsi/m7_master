@@ -12,8 +12,9 @@
     <!-- vehicle model and world -->
     <arg name="est" default="ekf2"/>
     <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/empty.world"/>
-    <arg name="sdf" default="$(rospack find mission7_master)/urdf/$(arg vehicle)_base.urdf"/>
-    <arg name="rcS" default="$(rospack find mission7_master)/urdf/posix-configs/SITL/init/$(arg est)/$(arg vehicle)"/>
+    <arg name="vehicle" default="noir"/>
+    <arg name="sdf" default="$(find mission7_master)/urdf/$(arg vehicle)_base.urdf"/>
+    <arg name="rcS" default="$(find mission7_master)/urdf/posix-configs/SITL/init/$(arg est)/$(arg vehicle)"/>
     <!-- gazebo configs -->
     <arg name="gui" default="true"/>
     <arg name="debug" default="false"/>
@@ -23,7 +24,7 @@
     <!-- MAVROS connection -->
     <arg name="fcu_url" default="udp://:14540@localhost:14557"/>
     <!-- PX4 SITL and Gazebo -->
-    <include file="$(find px4)/launch/posix_sitl.launch">
+    <include file="$(find mission7_master)/launch/posix_sitl_noir.launch">
         <arg name="x" value="$(arg x)"/>
         <arg name="y" value="$(arg y)"/>
         <arg name="z" value="$(arg z)"/>
