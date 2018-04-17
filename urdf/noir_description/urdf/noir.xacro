@@ -5,6 +5,7 @@
   <xacro:property name="namespace" value="" />
   <xacro:property name="rotor_velocity_slowdown_sim" value="10" />
   <xacro:property name="mesh_file" value="CF_assembly.stl" />
+  <xacro:property name="prop_mesh" value="prop18" />
   <xacro:property name="mesh_scale" value="1 1 1"/>
   <xacro:property name="mesh_scale_prop" value="1 1 1"/>
   <xacro:property name="mass" value="5" /> <!-- [kg] -->
@@ -75,7 +76,7 @@
     motor_number="0"
     rotor_drag_coefficient="${rotor_drag_coefficient}"
     rolling_moment_coefficient="${rolling_moment_coefficient}"
-    mesh="noir_prop"
+    mesh="${prop_mesh}"
     mesh_scale="${mesh_scale_prop}"
     color="Blue">
     <origin xyz="${arm_length_front_x} -${arm_length_front_y} ${rotor_offset_top}" rpy="0 0 0" />
@@ -97,7 +98,7 @@
     motor_number="1"
     rotor_drag_coefficient="${rotor_drag_coefficient}"
     rolling_moment_coefficient="${rolling_moment_coefficient}"
-    mesh="noir_prop"
+    mesh="${prop_mesh}"
     mesh_scale="${mesh_scale_prop}"
     color="DarkGrey">
     <origin xyz="-${arm_length_back_x} ${arm_length_back_y} ${rotor_offset_top}" rpy="0 0 0" />
@@ -118,7 +119,7 @@
     motor_number="2"
     rotor_drag_coefficient="${rotor_drag_coefficient}"
     rolling_moment_coefficient="${rolling_moment_coefficient}"
-    mesh="noir_prop"
+    mesh="${prop_mesh}"
     mesh_scale="${mesh_scale_prop}"
     color="Blue">
     <origin xyz="${arm_length_front_x} ${arm_length_front_y} ${rotor_offset_top}" rpy="0 0 0" />
@@ -139,7 +140,7 @@
     motor_number="3"
     rotor_drag_coefficient="${rotor_drag_coefficient}"
     rolling_moment_coefficient="${rolling_moment_coefficient}"
-    mesh="noir_prop"
+    mesh="${prop_mesh}"
     mesh_scale="${mesh_scale_prop}"
     color="DarkGrey">
     <origin xyz="-${arm_length_back_x} -${arm_length_back_y} ${rotor_offset_top}" rpy="0 0 0" />
