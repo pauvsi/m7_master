@@ -24,7 +24,7 @@
     <!-- MAVROS connection -->
     <arg name="fcu_url" default="udp://:14540@localhost:14557"/>
     <!-- PX4 SITL and Gazebo -->
-    <include file="$(find mission7_master)/launch/posix_sitl_noir.launch">
+    <include file="$(find mission7_master)/launch/simulation/posix_sitl_noir.launch">
         <arg name="x" value="$(arg x)"/>
         <arg name="y" value="$(arg y)"/>
         <arg name="z" value="$(arg z)"/>
@@ -42,7 +42,7 @@
         <arg name="respawn_gazebo" value="$(arg respawn_gazebo)"/>
     </include>
     <!-- MAVROS -->
-    <include file="$(find mavros)/launch/px4.launch">
+    <include file="$(find mission7_master)/launch/px4.launch">
         <!-- GCS link is provided by SITL -->
         <arg name="gcs_url" value=""/>
         <arg name="fcu_url" value="$(arg fcu_url)"/>
