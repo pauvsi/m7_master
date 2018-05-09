@@ -1,0 +1,19 @@
+<launch>
+
+	<param name="robot_description" command="cat $(find mission7_master)/robot_description/noir_base.urdf" />
+
+	<node pkg="robot_state_publisher" type="robot_state_publisher" name="m7_state_pub">
+	</node>
+	
+	
+	<include file="$(find mission7_master)/launch/simulation/mavros_sitl_noir.launch">
+        <arg name="x" value="0"/>
+        <arg name="y" value="0"/>
+        <arg name="z" value="0"/>
+        <arg name="R" value="0"/>
+        <arg name="P" value="0"/>
+        <arg name="Y" value="0"/>
+        <arg name="world" value="$(find test_environment)/worlds/empty_world_test.world"/>
+    </include>
+
+</launch>
