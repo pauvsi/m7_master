@@ -15,15 +15,11 @@
 
 #include <pauvsi_trajectory/trajectoryGeneration.h>
 
-#include "../include/m7_master/MasterTypes.h"
-#include "../include/m7_master/PID.h"
-#include "../include/m7_master/Polynomial.hpp"
-#include "../include/m7_master/MasterConfig.h"
-
-#include "../include/m7_master/Physics.h"
-
-//#include "../include/m7_master/roombaCallback.hpp"
-#include "../include/m7_master/ArmController.h"
+#include "../include/mission7_master/MasterConfig.h"
+#include "../include/mission7_master/Physics.h"
+#include "../include/mission7_master/PID.h"
+#include "../include/mission7_master/Polynomial.hpp"
+#include "../include/mission7_master/Types.h"
 
 
 //set false if estimating state another way

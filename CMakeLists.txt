@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
   nav_msgs
+  multirotor_trajectory
 )
 
 find_package(Eigen3 REQUIRED)
@@ -19,8 +20,7 @@ generate_messages(DEPENDENCIES actionlib_msgs)
 
 catkin_package(
  	INCLUDE_DIRS include
-#  LIBRARIES pauvsi_vio
-  CATKIN_DEPENDS roscpp pauvsi_trajectory actionlib actionlib_msgs
+  CATKIN_DEPENDS roscpp multirotor_trajectory actionlib actionlib_msgs
 #  DEPENDS system_lib
    DEPENDS eigen
    
@@ -39,27 +39,17 @@ include_directories(
 )
 
 
-#add_library(polynomial_master include/m7_master/Polynomial.hpp)
-#set_target_properties(polynomial_master PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(polynomial_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
-
-#add_library(physics include/m7_master/Physics.h)
-#set_target_properties(physics PROPERTIES LINKER_LANGUAGE CXX)
-
-#add_library(roomba_callback include/m7_master/roombaCallback.hpp)
-#set_target_properties(roomba_callback  PROPERTIES LINKER_LANGUAGE CXX)
 
 
-#add_library(types_master include/m7_master/MasterTypes.h)
-#set_target_properties(types_master PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(types_master ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+add_library(master_types include/mission7_master/Types.h)
+set_target_properties(master_types PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(master_types ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
 
-#add_library(pid include/m7_master/PID.h)
-#set_target_properties(pid PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(pid ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+add_library(m7master include/mission7_master/M7Master.cpp)
+target_link_libraries(m7master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} multirotor_trajectory_polynomial)
 
-#add_executable(master src/m7_master.cpp)
-#target_link_libraries(master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} polynomial_master types_master pid physics)
+add_executable(master_node src/master_node.cpp)
+target_link_libraries(master_node ${Eigen_LIBRARIES} ${catkin_LIBRARIES} m7master)
 
 
 
