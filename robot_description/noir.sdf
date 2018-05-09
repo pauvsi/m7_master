@@ -84,34 +84,41 @@
       <gravity>1</gravity>
       <velocity_decay/>
       <self_collide>0</self_collide>
-      <sensor name='_camera_front' type='camera'>
+      <sensor name='stereo_camera' type='multicamera'>
         <update_rate>30</update_rate>
-        <camera name='head'>
-          <horizontal_fov>1.9</horizontal_fov>
+        <camera name='left'>
+          <horizontal_fov>1.39626</horizontal_fov>
           <image>
-            <width>640</width>
+            <width>752</width>
             <height>480</height>
             <format>R8G8B8</format>
           </image>
           <clip>
             <near>0.02</near>
-            <far>50</far>
+            <far>100</far>
           </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0</mean>
-            <stddev>0</stddev>
-          </noise>
         </camera>
-        <plugin name='_camera_front_controller' filename='libgazebo_ros_camera.so'>
-          <robotNamespace/>
+        <camera name='right'>
+          <pose frame=''>0 -0.076 0 0 -0 0</pose>
+          <horizontal_fov>1.39626</horizontal_fov>
+          <image>
+            <width>752</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>100</far>
+          </clip>
+        </camera>
+        <plugin name='stereo_camera_controller' filename='libgazebo_ros_multicamera.so'>
           <alwaysOn>true</alwaysOn>
-          <updateRate>30</updateRate>
+          <updateRate>0.0</updateRate>
           <cameraName>camera_front</cameraName>
           <imageTopicName>image_raw</imageTopicName>
           <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <frameName>camera_front_link</frameName>
-          <hackBaseline>0.0</hackBaseline>
+          <frameName>/camera_front_link</frameName>
+          <hackBaseline>0.076</hackBaseline>
           <distortionK1>0.0</distortionK1>
           <distortionK2>0.0</distortionK2>
           <distortionK3>0.0</distortionK3>
@@ -556,10 +563,6 @@
       <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
       <motorSpeedPubTopic>/motor_speed/3</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
-    </plugin>
-    <plugin name='gps_plugin' filename='libgazebo_gps_plugin.so'>
-      <robotNamespace/>
-      <gpsNoise>true</gpsNoise>
     </plugin>
     <plugin name='mavlink_interface' filename='librotors_gazebo_mavlink_interface.so'>
       <robotNamespace/>

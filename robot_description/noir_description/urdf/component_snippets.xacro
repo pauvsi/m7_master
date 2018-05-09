@@ -36,6 +36,91 @@
     </gazebo>
   </xacro:macro>
 
+
+
+
+<!-- Macro to add a stereo camera -->
+<xacro:macro name="stereo_camera_macro" params="namespace parent_link camera_suffix base_line enable_visual *cylinder *origin">
+<link name="${namespace}/camera_${camera_suffix}_link">
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <xacro:insert_block name="cylinder" />
+        </geometry>
+      </collision>
+      <xacro:if value="${enable_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 1.57079632679 0" />
+          <geometry>
+            <xacro:insert_block name="cylinder" />
+          </geometry>
+          <material name="red" />
+        </visual>
+      </xacro:if>
+      <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      </inertial>
+    </link>
+    <joint name="${namespace}/camera_${camera_suffix}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent_link}" />
+      <child link="${namespace}/camera_${camera_suffix}_link" />
+    </joint>
+<gazebo reference="${namespace}/camera_${camera_suffix}_link">
+    <sensor type="multicamera" name="stereo_camera">
+      <!-- see MultiSenseSLPlugin.h for available modes -->
+      <update_rate>30.0</update_rate>
+      <camera name="left">
+	<!-- Spec sheet says 80deg X 45deg @ 1024x544pix.  Based on feedback
+	    from teams, we're instead doing 80deg X 80deg @ 800x800pix. -->
+	<horizontal_fov>1.3962634</horizontal_fov>
+	<image>
+	  <width>752</width>
+	  <height>480</height>
+	  <format>R8G8B8</format>
+	</image>
+	<clip>
+	  <near>0.02</near>
+	  <far>100</far>
+	</clip>
+      </camera>
+      <camera name="right">
+	<pose>0 -${base_line} 0 0 0 0</pose>
+	<!-- Spec sheet says 80deg X 45deg @ 1024x544pix.  Based on feedback
+	    from teams, we're instead doing 80deg X 80deg @ 800x800pix. -->
+	<horizontal_fov>1.3962634</horizontal_fov>
+	<image>
+	  <width>752</width>
+	  <height>480</height>
+	  <format>R8G8B8</format>
+	</image>
+	<clip>
+	  <near>0.02</near>
+	  <far>100</far>
+	</clip>
+      </camera>
+      <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
+	<alwaysOn>true</alwaysOn>
+	<updateRate>0.0</updateRate>
+	<cameraName>camera_${camera_suffix}</cameraName>
+	<imageTopicName>image_raw</imageTopicName>
+	<cameraInfoTopicName>camera_info</cameraInfoTopicName>
+	<frameName>${namespace}/camera_${camera_suffix}_link</frameName>
+	<!--<rightFrameName>right_camera_optical_frame</rightFrameName>-->
+	<hackBaseline>${base_line}</hackBaseline>
+	<distortionK1>0.0</distortionK1>
+	<distortionK2>0.0</distortionK2>
+	<distortionK3>0.0</distortionK3>
+	<distortionT1>0.0</distortionT1>
+	<distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+</xacro:macro>
+
+
   <!-- Macro to add a camera. -->
   <xacro:macro name="camera_macro"
     params="namespace parent_link camera_suffix frame_rate
@@ -109,6 +194,9 @@
       </sensor>
     </gazebo>
   </xacro:macro>
+
+
+
 
   <!-- Macro to add the controller interface. -->
   <xacro:macro name="controller_plugin_macro" params="namespace imu_sub_topic">
@@ -493,23 +581,23 @@
       <child link="${namespace}/vi_sensor_link" />
     </joint>
     <!-- Cameras -->
-    <xacro:if value="$(arg enable_cameras)">
+    <xacro:if value="true">
       <!-- Left Camera -->
       <xacro:vi_sensor_camera_macro
         namespace="${namespace}" parent_link="${namespace}/vi_sensor_link"
         camera_suffix="left" frame_rate="30.0">
-        <origin xyz="0.015 0.055 0.0065" rpy="0 0 0" />
+        <origin xyz="0.015 0.03805 0.0065" rpy="0 0 0" />
       </xacro:vi_sensor_camera_macro>
       <!-- Right Camera -->
       <xacro:vi_sensor_camera_macro namespace="${namespace}"
         parent_link="${namespace}/vi_sensor_link"
         camera_suffix="right" frame_rate="30.0">
-        <origin xyz="0.015 -0.055 0.0065" rpy="0 0 0" />
+        <origin xyz="0.015 -0.03805 0.0065" rpy="0 0 0" />
       </xacro:vi_sensor_camera_macro>
     </xacro:if>
 
     <!-- Depth Sensor -->
-    <xacro:if value="$(arg enable_depth)">
+    <xacro:if value="false">
       <xacro:vi_sensor_depth_macro
         namespace="${namespace}" parent_link="${namespace}/vi_sensor_link"
         camera_suffix="depth" frame_rate="30.0">
@@ -518,7 +606,7 @@
     </xacro:if>
 
     <!-- Groundtruth -->
-    <xacro:if value="$(arg enable_ground_truth)">
+    <xacro:if value="false">
       <!-- Odometry Sensor -->
       <xacro:odometry_plugin_macro
         namespace="${namespace}/ground_truth"
@@ -551,11 +639,12 @@
     </xacro:if>
 
     <!-- ADIS16448 IMU. -->
+<xacro:if value="false">
     <xacro:imu_plugin_macro
       namespace="${namespace}"
       imu_suffix=""
       parent_link="${namespace}/vi_sensor_link"
-      imu_topic="/imu"
+      imu_topic="/imu_vi"
       mass_imu_sensor="0.015"
       gyroscope_noise_density="0.0003394"
       gyroscopoe_random_walk="0.000038785"
@@ -568,6 +657,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
       <origin xyz="0.015 0 0.0113" rpy="0 0 0" />
     </xacro:imu_plugin_macro>
+</xacro:if>
   </xacro:macro>
 
 </robot>

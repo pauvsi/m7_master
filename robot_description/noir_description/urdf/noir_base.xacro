@@ -42,6 +42,25 @@
         />
   </xacro:if>
 
+
+<!--stereo camera-->
+<xacro:if value="true">
+<xacro:stereo_camera_macro
+    namespace="${namespace}"
+    camera_suffix="front"
+parent_link="base_link"
+base_line="0.076"
+enable_visual="true"
+    >
+<cylinder length="0.04" radius="0.04" />
+    <origin xyz="0 0 0.4" rpy="0 0 0" />
+</xacro:stereo_camera_macro>
+</xacro:if>
+
+
+
+<!--standard camera-->
+<xacro:if value="false">
 <xacro:camera_macro
     namespace="${namespace}"
     camera_suffix="front"
@@ -60,10 +79,10 @@ enable_visual="true"
 <cylinder length="0.04" radius="0.04" />
     <origin xyz="0 0 0.4" rpy="0 0 0" />
 </xacro:camera_macro>
-
+</xacro:if>
 
     <!-- Instantiate gps plugin. -->
-<xacro:if value="true">
+<xacro:if value="false">
   <xacro:gps_plugin_macro
     namespace="${namespace}"
     gps_noise="true"
