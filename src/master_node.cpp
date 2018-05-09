@@ -11,8 +11,6 @@ int main(int argc, char **argv){
 
 	ros::init(argc, argv, "mission_7_master_node");
 
-	ros::NodeHandle nh;
-
 	M7Master master;
 
 }
