@@ -42,13 +42,34 @@
         />
   </xacro:if>
 
+<xacro:camera_macro
+    namespace="${namespace}"
+    camera_suffix="front"
+parent_link="base_link"
+frame_rate="30"
+horizontal_fov="1.9"
+image_width="640"
+image_height="480"
+image_format="R8G8B8"
+min_distance="0.02"
+max_distance="50"
+noise_mean="0"
+noise_stddev="0"
+enable_visual="true"
+    >
+<cylinder length="0.04" radius="0.04" />
+    <origin xyz="0 0 0.4" rpy="0 0 0" />
+</xacro:camera_macro>
+
 
     <!-- Instantiate gps plugin. -->
+<xacro:if value="true">
   <xacro:gps_plugin_macro
     namespace="${namespace}"
     gps_noise="true"
     >
   </xacro:gps_plugin_macro>
+</xacro:if>
 
   <xacro:if value="$(arg enable_mavlink_interface)">
   <!-- Instantiate mavlink telemetry interface. -->

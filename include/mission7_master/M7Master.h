@@ -17,6 +17,8 @@
 #include <mavros_msgs/State.h>
 #include <mavros_msgs/RCIn.h>
 
+#include "Types.h"
+
 class M7Master {
 public:
 
@@ -28,6 +30,8 @@ public:
 
 	ros::Timer arm_offboard_timer;
 
+	std::deque<HighLevelGoal> goal_queue;
+
 	M7Master();
 	virtual ~M7Master();
 
@@ -36,6 +40,8 @@ public:
 	void main_loop();
 
 	void arm_flight_controller();
+
+	void set_to_offboard_mode();
 
 	void arming_timer_callback(const ros::TimerEvent& msg);
 };

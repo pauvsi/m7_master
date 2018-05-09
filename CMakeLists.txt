@@ -44,7 +44,7 @@ include_directories(
 
 add_library(master_types include/mission7_master/Types.h)
 set_target_properties(master_types PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(master_types ${Eigen_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(master_types ${Eigen_LIBRARIES} ${catkin_LIBRARIES} multirotor_trajectory_polynomial multirotor_trajectory_types)
 
 add_library(m7master include/mission7_master/M7Master.cpp)
 target_link_libraries(m7master ${Eigen_LIBRARIES} ${catkin_LIBRARIES} multirotor_trajectory_polynomial)

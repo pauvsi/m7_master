@@ -147,4 +147,7 @@
     <xacro:insert_block name="rotor_inertia" />
   </xacro:vertical_rotor>
 
+
+
+
 </robot>
