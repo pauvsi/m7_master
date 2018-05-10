@@ -18,7 +18,7 @@
       <inertia ixx="0.0347563" ixy="0.0" ixz="0.0" iyy="0.0458929" iyz="0.0" izz="0.0977"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.052"/>
       <geometry>
         <mesh filename="model://noir_description/meshes/CF_assembly.stl" scale="1 1 1"/>
         <!-- <box size="${body_width} ${body_width} ${body_height}"/> -->
@@ -28,7 +28,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="1.05 1.05 0.2"/>
+        <box size="0.255 0.255 0.09"/>
         <!-- [m] [m] [m] -->
       </geometry>
     </collision>
@@ -321,6 +321,19 @@
   <gazebo reference="rotor_3">
     <material>Gazebo/DarkGrey</material>
   </gazebo>
+  <!-- Set up extra frames-->
+  <link name="fcu"/>
+  <joint name="fcu_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="fcu"/>
+  </joint>
+  <link name="fcu_frd"/>
+  <joint name="fcu_frd_joint" type="fixed">
+    <origin rpy="3.14159265359 0 0" xyz="0 0 0"/>
+    <parent link="fcu"/>
+    <child link="fcu_frd"/>
+  </joint>
   <link name="/camera_front_left_optical_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -328,13 +341,6 @@
         <cylinder length="0.04" radius="0.04"/>
       </geometry>
     </collision>
-    <visual>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.04" radius="0.04"/>
-      </geometry>
-      <material name="red"/>
-    </visual>
     <inertial>
       <mass value="1e-5"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -342,7 +348,7 @@
     </inertial>
   </link>
   <joint name="/camera_front_left_optical_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0.4"/>
+    <origin rpy="0 0.78539816339 0" xyz="0.17 0.03805 0.01"/>
     <parent link="base_link"/>
     <child link="/camera_front_left_optical_link"/>
   </joint>
@@ -353,13 +359,6 @@
         <cylinder length="0.04" radius="0.04"/>
       </geometry>
     </collision>
-    <visual>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.04" radius="0.04"/>
-      </geometry>
-      <material name="red"/>
-    </visual>
     <inertial>
       <mass value="1e-5"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -367,7 +366,7 @@
     </inertial>
   </link>
   <joint name="/camera_front_right_optical_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 -0.076 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.0761 0"/>
     <parent link="/camera_front_left_optical_link"/>
     <child link="/camera_front_right_optical_link"/>
   </joint>
@@ -390,7 +389,7 @@
         </clip>
       </camera>
       <camera name="right">
-        <pose>0 -0.076 0 0 0 0</pose>
+        <pose>0 -0.0761 0 0 0 0</pose>
         <!-- Spec sheet says 80deg X 45deg @ 1024x544pix.  Based on feedback
 	    from teams, we're instead doing 80deg X 80deg @ 800x800pix. -->
         <horizontal_fov>1.3962634</horizontal_fov>
@@ -412,12 +411,58 @@
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>/camera_front_link</frameName>
         <!--<rightFrameName>right_camera_optical_frame</rightFrameName>-->
-        <hackBaseline>0.076</hackBaseline>
+        <hackBaseline>0.0761</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
         <distortionK3>0.0</distortionK3>
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <link name="laser_link">
+    <inertial>
+      <mass value="1e-5"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+  </link>
+  <joint name="laser_joint" type="fixed">
+    <origin rpy="0 1.57079632679 0" xyz="0.03 0.138 0.07"/>
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+  </joint>
+  <gazebo reference="laser_link">
+    <sensor name="laser" type="ray">
+      <always_on>true</always_on>
+      <update_rate>20</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.0005</min_angle>
+            <max_angle> 0.0005</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.0005</min_angle>
+            <max_angle> 0.0005</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>10</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin filename="libhector_gazebo_ros_sonar.so" name="gazebo_ros_laser_controller">
+        <gaussianNoise>0.005</gaussianNoise>
+        <topicName>/mavros/distance_sensor/laser_1_sub</topicName>
+        <frameId>laser_link</frameId>
       </plugin>
     </sensor>
   </gazebo>

@@ -41,7 +41,7 @@
       </inertial>
 
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0.052" rpy="0 0 0" />
         <geometry>
           <mesh filename="model://noir_description/meshes/${mesh_file}"
             scale="${mesh_scale}" />

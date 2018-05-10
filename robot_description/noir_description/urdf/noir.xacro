@@ -9,8 +9,8 @@
   <xacro:property name="mesh_scale" value="1 1 1"/>
   <xacro:property name="mesh_scale_prop" value="1 1 1"/>
   <xacro:property name="mass" value="5" /> <!-- [kg] -->
-  <xacro:property name="body_width" value="1.05" /> <!-- [m] -->
-  <xacro:property name="body_height" value="0.20" /> <!-- [m] -->
+  <xacro:property name="body_width" value="0.255" /> <!-- [m] -->
+  <xacro:property name="body_height" value="0.09" /> <!-- [m] -->
   <xacro:property name="mass_rotor" value="0.05" /> <!-- [kg] -->
   <xacro:property name="arm_length_front_x" value="0.265" /> <!-- [m] -->
   <xacro:property name="arm_length_back_x" value="0.265" /> <!-- [m] -->

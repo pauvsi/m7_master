@@ -1,19 +1,40 @@
 <launch>
 
-	<param name="robot_description" command="cat $(find mission7_master)/robot_description/noir_base.urdf" />
+	<param name="robot_description"
+		command="cat $(find mission7_master)/robot_description/noir_base.urdf" />
 
-	<node pkg="robot_state_publisher" type="robot_state_publisher" name="m7_state_pub">
+	<node pkg="robot_state_publisher" type="robot_state_publisher"
+		name="m7_state_pub">
+		<param name="publish_frequency" value="150"/>
 	</node>
+
+
+	<include
+		file="$(find mission7_master)/launch/simulation/mavros_sitl_noir.launch">
+		<arg name="x" value="0" />
+		<arg name="y" value="0" />
+		<arg name="z" value="0" />
+		<arg name="R" value="0" />
+		<arg name="P" value="0" />
+		<arg name="Y" value="0" />
+		<arg name="world" value="$(find test_environment)/worlds/empty_world_test.world" />
+	</include>
+
+
+	<!-- launch system -->
+	<!-- Viso2 -->
+	<node pkg="viso2_ros" type="stereo_odometer" name="stereo_odometer" output="screen">
 	
+	<param name="odom_frame_id" value="local_origin_ned"/>
+	<param name="base_link_frame_id" value="base_link"/>
 	
-	<include file="$(find mission7_master)/launch/simulation/mavros_sitl_noir.launch">
-        <arg name="x" value="0"/>
-        <arg name="y" value="0"/>
-        <arg name="z" value="0"/>
-        <arg name="R" value="0"/>
-        <arg name="P" value="0"/>
-        <arg name="Y" value="0"/>
-        <arg name="world" value="$(find test_environment)/worlds/empty_world_test.world"/>
-    </include>
+	<!-- NOTE must feed undistorted images!!!! -->>
+		<remap from="stereo/left/image" to="camera_front/left/image_raw" />
+		<remap from="stereo/right/image" to="camera_front/right/image_raw" />
+		<remap from="stereo/left/camera_info" to="camera_front/left/camera_info" />
+		<remap from="stereo/right/camera_info" to="camera_front/right/camera_info" />
+		
+		<remap from="/stereo_odometer/odometry" to="/mavros/odometry/odom"/>
+	</node>
 
 </launch>
